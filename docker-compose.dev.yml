@@ -1,0 +1,25 @@
+version: '3.3'
+services:
+  server:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    stdin_open: true
+    tty: true
+    depends_on:
+      - mongo
+    environment:
+      - NODE_ENV=docker
+    volumes:
+      - .:/workspace
+      - ~/.gitconfig:/root/.gitconfig
+    command: sleep infinity        
+  mongo:
+    image: mongo:latest
+    stdin_open: true
+    tty: true
+    volumes:
+      - mongo-data:/data/docker-admin-helper
+volumes:
+  mongo-data:
+    driver: local

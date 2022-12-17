@@ -1,0 +1,20 @@
+{
+  "name": "docker-admin-helper",
+  "version": "1.0.0",
+  "description": "App to manage docker images on connected servers",
+  "author": "Anton Krotyuk",
+  "license": "MIT",
+  "scripts": {
+    "dev": "",
+    "build": "",
+    "test": "",
+    "prod": "",
+    "postinstall": "(cd client && yarn install) && (cd server && yarn install)"
+  },
+  "dependencies": {
+
+  },
+  "devDependencies": {
+
+  }
+}

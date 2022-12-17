@@ -1,0 +1,7 @@
+{
+  "name": "Docker admin helper",
+  "dockerComposeFile": ["docker-compose.dev.yml"],
+  "service": "server",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose"
+}
