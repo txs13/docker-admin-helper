@@ -12,6 +12,7 @@ const userAgentContent = "user agent content";
 
 describe("user api tests", () => {
   beforeAll(async () => {
+    mongoose.set("strictQuery", false);
     await mongoose.connect(dbUri, { dbName: testDbName });
   });
 

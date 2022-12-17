@@ -20,6 +20,7 @@ const userAgentContent = "user agent content";
 
 describe("login / logout tests", () => {
   beforeAll(async () => {
+    mongoose.set("strictQuery", false);
     await mongoose.connect(dbUri, { dbName: testDbName });
     // create role - because it is needed for the user registration
     const roleInput: RoleInput = {
@@ -199,7 +200,7 @@ describe("login / logout tests", () => {
     expect(logoutResult.body[0].message).toBe("successfully logged out");
 
     // check correctness of the DB record
-    dbSessions = await SessionModel.find({ email: userEmail });
+    dbSessions = await SessionModel.find({ userId: user?.id });
     expect(dbSessions.length).toBe(1);
     expect(dbSessions[0].closedAt).toBeTruthy();
     expect(dbSessions[0].userActions.length).toBe(1);

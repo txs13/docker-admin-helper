@@ -20,6 +20,7 @@ describe("role api tests", () => {
   let mockRoleId: string;
 
   beforeAll(async () => {
+    mongoose.set("strictQuery", false);
     await mongoose.connect(dbUri, { dbName: testDbName });
     // create admin user role
     const adminUserRole: RoleInput = {

@@ -27,6 +27,7 @@ const newUserRoleInput2: RoleInput = {
 
 describe("authorization and admin access tests", () => {
   beforeAll(async () => {
+    mongoose.set("strictQuery", false);
     await mongoose.connect(dbUri, { dbName: testDbName });
     // create user and admin: user roles, users, granting admin rights for one of them
     const adminUserRole: RoleInput = {
