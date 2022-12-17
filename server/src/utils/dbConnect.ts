@@ -7,6 +7,7 @@ const dbConnect = async () => {
   const { dbUri, dbName } = getEnvVars();
 
   try {
+    mongoose.set("strictQuery", false);
     await mongoose.connect(dbUri, { dbName: dbName });
     log.info(`DB "${dbName}" is connected on the host ${dbUri}`);
     await checkCreateDefaultEntities();
