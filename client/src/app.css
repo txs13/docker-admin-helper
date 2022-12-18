@@ -1,0 +1,32 @@
+.app {
+  height: 100vh;
+  width: 100%;
+}
+
+.animation-container {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto;
+  align-items: center;
+  justify-items: center;
+}
+
+.spinner {
+  top: 50%;
+  width: 64px;
+  height: 64px;
+  border: 8px solid;
+  border-radius: 50%;
+  animation: spin-anim 1.2s linear infinite;
+}
+
+@keyframes spin-anim {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
