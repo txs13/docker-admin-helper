@@ -3,6 +3,7 @@ import path from "path";
 import jwt from "jsonwebtoken";
 import log from "./logger";
 import genKeyPair from "./generateKeys";
+import keysFolder from "../config/keyFolderConfig";
 
 export const envDefaultContent =
   "DEV_HOST=0.0.0.0" +
@@ -42,7 +43,7 @@ const checkKeyPair = (): boolean => {
       log.info(".env file is in place");
     } else {
       log.error(
-        "Something is wrong with your .env file - please check manualy"
+        "Something is wrong with your .env file - please check manually"
       );
     }
   } catch (e: any) {
@@ -51,7 +52,7 @@ const checkKeyPair = (): boolean => {
       log.info("New .env file is generated with default values");
     } catch (e: any) {
       log.error(
-        "Something is wrong with your .env file - please check manualy"
+        "Something is wrong with your .env file - please check manually"
       );
     }
   }
@@ -60,13 +61,13 @@ const checkKeyPair = (): boolean => {
   let privKey: null | string;
 
   // getting and checking keys folder path
-  const keysFolder = path.join(__dirname, "..", "..", "keys");
+
   if (!fs.existsSync(keysFolder)) {
     fs.mkdirSync(keysFolder);
     log.info("keys folder does not exist, new keys dir is created");
   }
 
-  // trying to read publick key
+  // trying to read public key
   try {
     pubKey = fs.readFileSync(path.join(keysFolder, "id_rsa_pub.pem"), "utf8");
   } catch {

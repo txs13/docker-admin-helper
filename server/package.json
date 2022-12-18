@@ -7,9 +7,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only --exit-child src/index.ts",
-    "build": "tsc && rm -r -d frontend-build || true && cd ../client && yarn build && mv build ../server/frontend-build",
-    "test": "jest --runInBand",
-    "prod": "tsc && APP_MODE=PROD node ./build"
+    "build": "tsc",
+    "test": "jest --runInBand"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

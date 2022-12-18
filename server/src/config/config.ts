@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
-import log from "../utils/logger";
+import keysFolder from "./keyFolderConfig";
 dotenv.config();
 
 const getEnvVars = (): {
@@ -15,7 +15,7 @@ const getEnvVars = (): {
   refreshTokenTtl: number;
   privKey: string;
   pubKey: string;
-  prodMode: boolean
+  prodMode: boolean,
 } => {
   // .env parameters are read
   const devHost = process.env.DEV_HOST as string;
@@ -29,16 +29,8 @@ const getEnvVars = (): {
   const saltWorkFactor = Number(process.env.SALT_WORK_FACTOR);
   const accessTokenTtl = Number(process.env.ACCESS_TOKEN_TTL);
   const refreshTokenTtl = Number(process.env.REFRESH_TOKEN_TTL);
-  const keysFolder = path.join(__dirname, "..", "..", "keys");
-  const privKey = fs.readFileSync(
-    path.join(keysFolder, "id_rsa_priv.pem"),
-    "utf8"
-  ) as string;
-  const pubKey = fs.readFileSync(
-    path.join(keysFolder, "id_rsa_pub.pem"),
-    "utf8"
-  ) as string;
-
+  
+  
   // detect docker mode and app mode
   // process.env.NODE_ENV is either "docker" when is run in docker and undefined when run locally
   let appMode = process.env.NODE_ENV
@@ -60,7 +52,7 @@ const getEnvVars = (): {
       devMode = true;
       break;
   }
-
+  
   // assign right values depending on the app mode
   const host = devMode ? devHost : prodHost;
   const port = devMode ? devPort : prodPort;
@@ -80,6 +72,15 @@ const getEnvVars = (): {
     }
   }
 
+  const privKey = fs.readFileSync(
+    path.join(keysFolder, "id_rsa_priv.pem"),
+    "utf8"
+  ) as string;
+  const pubKey = fs.readFileSync(
+    path.join(keysFolder, "id_rsa_pub.pem"),
+    "utf8"
+  ) as string;
+  
     return {
       host: host,
       port: port,
@@ -91,7 +92,7 @@ const getEnvVars = (): {
       refreshTokenTtl: refreshTokenTtl,
       privKey: privKey,
       pubKey: pubKey,
-      prodMode: !devMode
+      prodMode: !devMode,
     };
 };
 

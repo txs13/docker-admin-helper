@@ -7,6 +7,8 @@ import crypto from "crypto";
 import fs from "fs";
 import path from 'path'
 
+import keysFolder from "../config/keyFolderConfig";
+
 const genKeyPair = () => {
   const keyPair = crypto.generateKeyPairSync("rsa", {
     modulusLength: 4096, // bits - standard for RSA keys
@@ -21,7 +23,6 @@ const genKeyPair = () => {
   });
   
   // Create the public key file
-  const keysFolder = path.join(__dirname, "..","..","keys")
   fs.writeFileSync(path.join(keysFolder, "id_rsa_pub.pem"), keyPair.publicKey);
 
   // Create the private key file
