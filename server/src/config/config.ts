@@ -4,6 +4,32 @@ import path from "path";
 import keysFolder from "./keyFolderConfig";
 dotenv.config();
 
+// detect docker mode and app mode
+// process.env.NODE_ENV is either "docker" when is run in docker and undefined when run locally
+let appMode = process.env.NODE_ENV
+if (!appMode) {
+  appMode = "local"
+}
+
+// process.env.MODE_ENV is either "DEV" or "PROD" when is run in development or production mode
+let devModeString = process.env.MODE_ENV
+let devMode: boolean = true
+switch (devModeString) {
+  case "DEV":
+    devMode = true;
+    break;
+  case "PROD":
+    devMode = false;
+    break;
+  default:
+    devMode = true;
+    break;
+}
+
+if (devMode) {
+  dotenv.config({path: "../.env"})
+}
+
 const getEnvVars = (): {
   host: string;
   port: number;
@@ -31,27 +57,6 @@ const getEnvVars = (): {
   const refreshTokenTtl = Number(process.env.REFRESH_TOKEN_TTL);
   
   
-  // detect docker mode and app mode
-  // process.env.NODE_ENV is either "docker" when is run in docker and undefined when run locally
-  let appMode = process.env.NODE_ENV
-  if (!appMode) {
-    appMode = "local"
-  }
-
-  // process.env.MODE_ENV is either "DEV" or "PROD" when is run in development or production mode
-  let devModeString = process.env.MODE_ENV
-  let devMode: boolean = true
-  switch (devModeString) {
-    case "DEV":
-      devMode = true;
-      break;
-    case "PROD":
-      devMode = false;
-      break;
-    default:
-      devMode = true;
-      break;
-  }
   
   // assign right values depending on the app mode
   const host = devMode ? devHost : prodHost;

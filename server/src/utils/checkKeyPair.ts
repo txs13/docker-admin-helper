@@ -14,9 +14,9 @@ export const envDefaultContent =
   "\n" +
   "PROD_PORT=1337" +
   "\n" +
-  "DB_URI_DEV=mongodb://localhost:27017" +
+  "DB_URI_DEV=mongodb://127.0.0.1:27017" +
   "\n" +
-  "DB_URI_PROD=mongodb://localhost:27017" +
+  "DB_URI_PROD=mongodb://127.0.0.1:27017" +
   "\n" +
   "DB_URI_DOCKER_DEV=mongodb://mongo:27017" +
   "\n" +
@@ -36,7 +36,7 @@ export const envDefaultContent =
 
 const checkKeyPair = (): boolean => {
   // check .env file and create it in case there is no one
-  const envPath = path.join(__dirname, "..", "..", ".env");
+  const envPath = path.join(__dirname, "..", "..", "..", ".env");
   try {
     const file = fs.readFileSync(envPath);
     if (file) {

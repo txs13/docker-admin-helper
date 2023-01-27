@@ -5,33 +5,22 @@ import { AppLanguageOptions } from "../../resources/getTextResources.types";
 
 export const initialValue: AppSettings = {};
 
-export const cookiesDataSlice = createSlice({
-  name: "cookiesSlice",
+export const appSettingsSlice = createSlice({
+  name: "appSettingsSlice",
   initialState: { value: initialValue },
   reducers: {
-    setCookies: (state, action) => {
+    updateAppSettings: (state, action) => {
       state.value = action.payload;
     },
-    setAndStoreCookies: (state, action) => {
-      localStorage.setItem("refreshinfo", action.payload);
-      state.value = action.payload;
-    },
-    deleteCookies: (state, action) => {
+    resetAppSettings: (state, action) => {
       state.value = initialValue;
-    },
-    deleteRefreshToken: (state, action) => {
-      state.value = {
-        ...state.value,
-      };
     },
   },
 });
 
 export const {
-  setCookies,
-  setAndStoreCookies,
-  deleteCookies,
-  deleteRefreshToken,
-} = cookiesDataSlice.actions;
+  updateAppSettings,
+  resetAppSettings,
+} = appSettingsSlice.actions;
 
-export default cookiesDataSlice.reducer;
+export default appSettingsSlice.reducer;
