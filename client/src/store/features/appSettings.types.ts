@@ -9,13 +9,11 @@ export interface LoginError {
   errorMessage: string;
 }
 
-export interface CookiesInterface {
-  accessToken: string;
-  refreshToken: string;
-  sessionTtl: number;
-  isAdmin?: boolean;
-  rememberPassword?: boolean;
-  storedEmail: string;
+export interface CookiesData {
+  accessToken?: string;
+  refreshToken?: string;
+  sessionTtl?: number;
+  storedEmail?: string;
 }
 
 export interface UserInput {
@@ -52,11 +50,6 @@ export interface RoleDocument extends RoleInput {
   __v: number;
 }
 
-export interface CookiesData {
-  refreshToken?: string;
-  expires?: number;
-  userEmail?: string;
-}
 
 export interface AppSettings {
   currentUser?: UserDocument;
@@ -65,4 +58,5 @@ export interface AppSettings {
   appUsers?: UserDocument[];
   cookiesData?: CookiesData;
   appLanguage?: AppLanguageOptions;
+  isAdmin?: boolean;
 }
