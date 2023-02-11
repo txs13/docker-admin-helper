@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import appSettingsReducer from "./features/appSettings.slice"
+import appStateReducer from "./features/appState.slice"
 
 const store = configureStore({
     reducer: {
-        appSettingsReducer: appSettingsReducer
+        appSettings: appSettingsReducer,
+        appState: appStateReducer
     }
 })
 

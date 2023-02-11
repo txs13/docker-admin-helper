@@ -50,7 +50,6 @@ export interface RoleDocument extends RoleInput {
   __v: number;
 }
 
-
 export interface AppSettings {
   currentUser?: UserDocument;
   currentRole?: RoleDocument;
