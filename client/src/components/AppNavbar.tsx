@@ -11,15 +11,21 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useTheme } from "@emotion/react";
 
 import { RootState } from "../store/store";
 import CoPresentTwoToneIcon from "@mui/icons-material/CoPresentTwoTone";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import styles from "./AppNavbar.styles";
+import { getTextResources } from "../resources/getTextResources";
+import {
+  FormsNames,
+  LocalizedTextResources,
+} from "../resources/getTextResources.types";
+
+enum MenuItemKeys {SETTINGS, PROFILE, LOGIN_REGISTER, LOGOUT, ABOUT}
 
 interface MenuItemType {
-  key: "SETTINGS" | "PROFILE" | "LOGIN_REGISTER" | "LOGOUT" | "ABOUT";
+  key: MenuItemKeys;
   text: string;
 }
 
@@ -30,23 +36,59 @@ const AppNavbar: React.FunctionComponent = () => {
   const appLanguage = useSelector(
     (state: RootState) => state.appState.value.appLanguage
   );
-  const theme = useTheme();
+
+  const [textRes, setTextRes] = useState<LocalizedTextResources>({});
+  
   const [menuItems, setMenuItems] = useState<MenuItemType[]>([]);
+  const [anchorElMenu, setAnchorElMenu] = React.useState<null | HTMLElement>(
+    null
+  );
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElMenu(event.currentTarget);
+  };
+  const handleCloseMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElMenu(null);
+    if ((event.target as HTMLElement).id) {
+        const id = Number((event.target as HTMLElement).id);
+        switch (id) {
+          case MenuItemKeys.LOGIN_REGISTER:
+            console.log("login-register");
+            break;
+          case MenuItemKeys.ABOUT:
+            console.log("about");
+            break;
+          case MenuItemKeys.LOGOUT:
+            console.log("logout");
+            break;
+          case MenuItemKeys.SETTINGS:
+            console.log("settings");
+            break;
+          case MenuItemKeys.PROFILE:
+            console.log("profile");
+            break;
+        }
+    }
+  };
 
   useEffect(() => {
+    const updTextRes = getTextResources(appLanguage, FormsNames.NAVBAR);
+    if (JSON.stringify(updTextRes) !== JSON.stringify(textRes)) {
+        setTextRes(updTextRes);
+    }
+
     if (appUser) {
       setMenuItems([
-        { key: "LOGIN_REGISTER", text: " " },
-        { key: "ABOUT", text: "" },
+        { key: MenuItemKeys.LOGIN_REGISTER, text: textRes.loginRegisterMenuitem || " " },
+        { key: MenuItemKeys.ABOUT, text: textRes.aboutMenuitem || " " },
       ]);
     } else {
       setMenuItems([
-        { key: "PROFILE", text: " " },
-        { key: "SETTINGS", text: "" },
-        { key: "LOGOUT", text: "" },
+        { key: MenuItemKeys.PROFILE, text: textRes.profileMenuItem || " " },
+        { key: MenuItemKeys.SETTINGS, text: textRes.settingsMenuItem || " " },
+        { key: MenuItemKeys.LOGOUT, text: textRes.logoutMenuItem || " " },
       ]);
     }
-  }, [appUser]);
+  }, [appUser, textRes, appLanguage]);
 
   return (
     <AppBar position="static">
@@ -72,9 +114,35 @@ const AppNavbar: React.FunctionComponent = () => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               color="inherit"
+              onClick={handleMenu}
             >
-              <AccountCircle />
+              <AccountCircle fontSize="large"/>
             </IconButton>
+            <Menu
+              sx={{ mt: "45px" }}
+              id="menu-appbar"
+              anchorEl={anchorElMenu}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorElMenu)}
+              onClose={handleCloseMenu}
+            >
+              {menuItems.map((menuItem) => (
+                <MenuItem key={menuItem.key} onClick={handleCloseMenu}>
+                  <Typography id={menuItem.key.toString()} textAlign="center">
+                    {menuItem.text}
+                  </Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+
             <Button sx={styles.button} variant="outlined">
               App Button 2
             </Button>

@@ -31,7 +31,7 @@ const getTextFile = (file: FormsNames): TextResources => {
 export const getTextResources = (
   language: AppLanguageOptions,
   file: FormsNames
-) => {
+): LocalizedTextResources => {
   const textResources: LocalizedTextResources = {};
   const textResourcesMultilang: TextResources = getTextFile(file);
   for (let prop in textResourcesMultilang) {

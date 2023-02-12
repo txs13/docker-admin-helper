@@ -1,7 +1,22 @@
 import { TextResources } from "../getTextResources.types";
 
 export const navbarTextRes: TextResources = {
-  appName: {
-    EN: "Docker Admin Helper",
+  aboutButton: {
+    EN: "About App",
   },
+  settingsMenuItem: {
+    EN: "Settings",
+  },
+  profileMenuItem: {
+    EN: "Profile",
+  },
+  loginRegisterMenuitem: {
+    EN: "Login / Register",
+  },
+  logoutMenuItem: {
+    EN: "Logout",
+  },
+  aboutMenuitem: {
+    EN: "About App"
+  }
 };
