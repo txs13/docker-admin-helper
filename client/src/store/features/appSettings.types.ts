@@ -1,5 +1,3 @@
-import { AppLanguageOptions } from "../../resources/getTextResources.types";
-
 export interface LoginInput {
   email: string;
   password: string;
@@ -56,6 +54,5 @@ export interface AppSettings {
   appRoles?: RoleDocument[];
   appUsers?: UserDocument[];
   cookiesData?: CookiesData;
-  appLanguage?: AppLanguageOptions;
   isAdmin?: boolean;
 }

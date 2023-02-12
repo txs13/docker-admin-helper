@@ -1,8 +1,10 @@
-import { useTheme } from "@mui/material";
+import { Container, useTheme } from "@mui/material";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
+
 import { RootState } from "../store/store";
 import startApService from "../store/storeServices/startUpService";
+import AppNavbar from "./AppNavbar";
 
 import Router from "./Router";
 
@@ -11,9 +13,8 @@ const AppFrame: React.FunctionComponent = () => {
   const spinnerStyle = {
     borderColor: `${theme.palette.info.dark} transparent ${theme.palette.info.dark} transparent`,
   };
-  
+
   useEffect(() => {
-    console.log("This is happening");
     startApService();
   }, []);
 
@@ -21,13 +22,16 @@ const AppFrame: React.FunctionComponent = () => {
 
   return (
     <>
-      {!appState.globalLoading ? (
-        <Router />
-      ) : (
-        <div className="animation-container">
-          <div className="spinner" style={spinnerStyle}></div>
-        </div>
-      )}
+      <AppNavbar />
+      <Container maxWidth="xl">
+        {!appState.globalLoading ? (
+          <Router />
+        ) : (
+          <div className="animation-container">
+            <div className="spinner" style={spinnerStyle}></div>
+          </div>
+        )}
+      </Container>
     </>
   );
 };

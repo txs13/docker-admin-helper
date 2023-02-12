@@ -1,14 +1,18 @@
 import { makeStateLoaded } from "./appStateServices";
-import { updatePublicRoles } from "./appSettingsServices"
+import { updatePublicRoles } from "./appSettingsServices";
+import { CookiesData } from "../features/appSettings.types";
 import store from "../store";
 
 const startApService = async () => {
   // fetch public roles
-  console.log(store.getState().appSettings.value);
   await updatePublicRoles();
-  console.log(store.getState().appSettings.value);
+
   // read cookies
-  // TODO: read cookies
+  const storageRefreshToken = localStorage.getItem("refreshinfo");
+  if (storageRefreshToken) {
+    const refreshToken: CookiesData = JSON.parse(storageRefreshToken);
+    // TODO: read cookies
+  }
   // silent login with cookies data
   // TODO: silent login
   // if admin has logged in, fetch all the roles

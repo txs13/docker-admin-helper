@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { AppLanguageOptions } from "../../resources/getTextResources.types";
 
 import { AppState } from "./appState.types";
 
 export const initialValue: AppState = {
-    globalLoading: true
+    globalLoading: true,
+    appLanguage: AppLanguageOptions.EN
 };
 
 export const appStateSlice = createSlice({
