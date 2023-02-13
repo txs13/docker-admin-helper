@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import store from "./store/store";
 import "./app.css";
 import AppFrame from "./components/AppFrame";
+import { Box, CssBaseline } from "@mui/material";
 
 const appTheme = createTheme();
 
@@ -14,9 +15,10 @@ const App: React.FunctionComponent = () => {
   return (
     <Provider store={store}>
       <ThemeProvider theme={appTheme}>
-        <div className="app">
+        <CssBaseline />
+        <Box className="app">
           <AppFrame />
-        </div>
+        </Box>
       </ThemeProvider>
     </Provider>
   );
