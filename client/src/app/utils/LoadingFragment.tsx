@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, useTheme } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +14,6 @@ const LoadingFragment: React.FunctionComponent<LoadingFragmentPropsType> = ({
   routing = false,
 }) => {
   const navigate = useNavigate();
-  const theme = useTheme();
   const appUser = useSelector(
     (state: RootState) => state.appSettings.value.currentUser
   );
@@ -30,12 +29,7 @@ const LoadingFragment: React.FunctionComponent<LoadingFragmentPropsType> = ({
 
   return (
     <Box sx={styles.animationContainer}>
-      <Box
-        sx={{
-          ...styles.spinner,
-          borderColor: `${theme.palette.info.dark} transparent ${theme.palette.info.dark} transparent`,
-        }}
-      ></Box>
+      <CircularProgress sx={styles.spinner} />
     </Box>
   );
 };

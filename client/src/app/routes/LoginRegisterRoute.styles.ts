@@ -1,7 +1,7 @@
 import { ComponentStylesType } from "../ComponentStylesType";
 
 const styles: ComponentStylesType = {
-  animationContainer: {
+  viewPort: {
     height: "100%",
     width: "100%",
     display: "grid",
@@ -10,10 +10,19 @@ const styles: ComponentStylesType = {
     alignItems: "center",
     justifyItems: "center",
   },
-  spinner: {
-    top: "50%",
-    width: "64px",
-    height: "64px",
+  formPort: {
+    width: {
+      xs: "100%",
+      sm: "500px"
+    },
+    height: {
+      xs: "100%",
+      sm: "auto"
+    }
+  },
+  tabsList: {
+    borderBottom: 1,
+    borderColor: "divider",
   },
 };
 

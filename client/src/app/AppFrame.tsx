@@ -26,7 +26,7 @@ const AppFrame: React.FunctionComponent = () => {
       >
         <Container
           maxWidth="xl"
-          sx={{ ...styles.container, backgroundColor: theme.palette.common.white }}
+          sx={{ ...styles.container }}
         >
           {!appState.globalLoading ? <Router /> : <LoadingFragment />}
         </Container>
