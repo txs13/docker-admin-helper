@@ -7,12 +7,10 @@ import startApService from "../store/storeServices/startUpService";
 import AppNavbar from "./AppNavbar";
 import Router from "./Router";
 import styles from "./AppFrame.styles";
+import LoadingFragment from "./utils/LoadingFragment";
 
 const AppFrame: React.FunctionComponent = () => {
   const theme = useTheme();
-  const spinnerStyle = {
-    borderColor: `${theme.palette.info.dark} transparent ${theme.palette.info.dark} transparent`,
-  };
 
   useEffect(() => {
     startApService();
@@ -30,13 +28,7 @@ const AppFrame: React.FunctionComponent = () => {
           maxWidth="xl"
           sx={{ ...styles.container, backgroundColor: theme.palette.common.white }}
         >
-          {!appState.globalLoading ? (
-            <Router />
-          ) : (
-            <div className="animation-container">
-              <div className="spinner" style={spinnerStyle}></div>
-            </div>
-          )}
+          {!appState.globalLoading ? <Router /> : <LoadingFragment />}
         </Container>
       </Box>
     </Box>
