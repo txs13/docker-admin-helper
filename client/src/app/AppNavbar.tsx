@@ -11,10 +11,10 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import CoPresentTwoToneIcon from "@mui/icons-material/CoPresentTwoTone";
 
 import { RootState } from "../store/store";
-import CoPresentTwoToneIcon from "@mui/icons-material/CoPresentTwoTone";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import styles from "./AppNavbar.styles";
 import { getTextResources } from "../resources/getTextResources";
 import {
