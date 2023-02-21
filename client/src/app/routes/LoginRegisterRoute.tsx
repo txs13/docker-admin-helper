@@ -1,9 +1,4 @@
-import {
-  Box,
-  Paper,
-  Tab,
-  useTheme,
-} from "@mui/material";
+import { Box, Paper, Tab, useTheme } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -37,6 +32,10 @@ const LoginRegisterRoute: React.FunctionComponent = () => {
       setTextRes(updTextRes);
     }
   }, [textRes, appLanguage]);
+  // get roles store state -----------------------------------------------------
+  const appRoles = useSelector(
+    (state: RootState) => state.appSettings.value.appRoles
+  );
 
   return (
     <Box
@@ -47,7 +46,11 @@ const LoginRegisterRoute: React.FunctionComponent = () => {
           <Box sx={styles.tabsList}>
             <TabList variant="fullWidth" onChange={handleTabChange}>
               <Tab label={textRes.loginTabName} value="1" />
-              <Tab label={textRes.registerTabName} value="2" />
+              <Tab
+                label={textRes.registerTabName}
+                value="2"
+                disabled={!appRoles || appRoles?.length === 0 ? true : false}
+              />
             </TabList>
           </Box>
           <Box sx={styles.innerFormPort}>

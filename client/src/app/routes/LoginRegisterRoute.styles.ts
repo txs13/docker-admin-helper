@@ -28,23 +28,28 @@ const styles: ComponentStylesType = {
     height: "100%",
     width: "100%",
     display: "grid",
-    gridTemplateColumns: "30% 70%",
+    gridTemplateColumns: {
+      xs: "auto",
+      sm: "30% 70%",
+    },
     gridTemplateRows: "auto",
     alignItems: "center",
     justifyItems: "center",
-
   },
   logoBox: {
     height: "100%",
     width: "100%",
-    display: "grid",
+    display: {
+      xs: "none",
+      sm: "grid",
+    },
     gridTemplateColumns: "auto",
     gridTemplateRows: "auto",
     alignItems: "center",
     justifyItems: "center",
   },
   logoPicture: {
-    fontSize: "4em"
+    fontSize: "4em",
   },
   loginForm: {
     height: "100%",
