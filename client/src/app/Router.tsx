@@ -11,7 +11,7 @@ import LoadingFragment from "./utils/LoadingFragment";
 
 const Router: React.FunctionComponent = () => {
   const appUser = useSelector(
-    (state: RootState) => state.appSettings.value.currentUser
+    (state: RootState) => state.appState.value.currentUser
   );
 
   return (

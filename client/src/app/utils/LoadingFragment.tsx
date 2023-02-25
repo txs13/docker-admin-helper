@@ -15,7 +15,7 @@ const LoadingFragment: React.FunctionComponent<LoadingFragmentPropsType> = ({
 }) => {
   const navigate = useNavigate();
   const appUser = useSelector(
-    (state: RootState) => state.appSettings.value.currentUser
+    (state: RootState) => state.appState.value.currentUser
   );
 
   useEffect(() => {

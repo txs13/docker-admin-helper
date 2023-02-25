@@ -53,7 +53,7 @@ const RegisterForm: React.FunctionComponent = () => {
   }, [textRes, appLanguage]);
 
   // get store vars
-  const appRoles = useSelector((state: RootState) => state.appSettings.value.appRoles);
+  const appRoles = useSelector((state: RootState) => state.usersRoles.value.appRoles);
 
   // form state variable --------------------------------------------------------
   const [formState, setFormState] = useState(initialFormState);

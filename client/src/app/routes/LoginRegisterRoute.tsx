@@ -34,7 +34,7 @@ const LoginRegisterRoute: React.FunctionComponent = () => {
   }, [textRes, appLanguage]);
   // get roles store state -----------------------------------------------------
   const appRoles = useSelector(
-    (state: RootState) => state.appSettings.value.appRoles
+    (state: RootState) => state.usersRoles.value.appRoles
   );
 
   return (

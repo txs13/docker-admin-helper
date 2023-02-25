@@ -1,6 +1,6 @@
 import { makeStateLoaded } from "./appStateServices";
-import { updatePublicRoles } from "./appSettingsServices";
-import { CookiesData } from "../features/appSettings.types";
+import { updatePublicRoles } from "./usersRolesServices";
+import { CookiesData } from "../features/appState.types";
 import store from "../store";
 
 const startApService = async () => {

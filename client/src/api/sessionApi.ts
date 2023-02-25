@@ -6,17 +6,19 @@ import {
   OPTIONS,
   OPTIONS_WITH_TOKEN,
   ApiCallResponse,
-  processResponse
+  processResponse,
 } from "./apiSettingsAndMethods";
-import { LoginInput } from "../store/features/appSettings.types";
+import { LoginInput } from "../store/features/appState.types";
 
 export const loginApiCall = async (
   loginInput: LoginInput
 ): Promise<ApiCallResponse> => {
-    const response = await client.post(`${USER_API}/login`, loginInput, {
+  const response = await client
+    .post(`${USER_API}/login`, loginInput, {
       ...OPTIONS,
-    }).catch((e) => {
+    })
+    .catch((e) => {
       return processResponse(e.response);
     });
-    return processResponse(response);
+  return processResponse(response);
 };

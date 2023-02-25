@@ -31,7 +31,7 @@ interface MenuItemType {
 
 const AppNavbar: React.FunctionComponent = () => {
   const appUser = useSelector(
-    (state: RootState) => state.appSettings.value.currentUser
+    (state: RootState) => state.appState.value.currentUser
   );
   const appLanguage = useSelector(
     (state: RootState) => state.appState.value.appLanguage

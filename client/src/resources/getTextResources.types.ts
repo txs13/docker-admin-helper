@@ -9,6 +9,7 @@ export enum FormsNames {
   "APP_GENERAL",
   "NAVBAR",
   "LOGIN_REGISTER",
+  "USER_ROLE_VALIDATION"
 }
 
 export interface PropPair {
