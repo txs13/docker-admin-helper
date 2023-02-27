@@ -9,11 +9,13 @@ import {
   ApiCallResponse,
 } from "./apiSettingsAndMethods";
 
-export const fetchPublicRoles = async (): Promise<ApiCallResponse> => {
-    const response = await client.get(`${ROLE_API}`, {
+export const fetchPublicRolesApiCall = async (): Promise<ApiCallResponse> => {
+  const response = await client
+    .get(`${ROLE_API}`, {
       ...OPTIONS,
-    }).catch((e) => {
-        return processResponse(e.response);
+    })
+    .catch((e) => {
+      return processResponse(e.response);
     });
-    return processResponse(response);
+  return processResponse(response);
 };
