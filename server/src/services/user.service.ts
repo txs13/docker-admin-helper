@@ -104,7 +104,7 @@ export const deleteUser = async (id: string) => {
   try {
     const user = await UserModel.findById(id);
     if (user) {
-      await user.delete();
+      await user.deleteOne();
       return true;
     } else {
       throw new Error("wrong user id");

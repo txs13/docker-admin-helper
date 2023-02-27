@@ -99,7 +99,7 @@ export const deleteRole = async (id: string) => {
         userrole_id: id,
       });
       if (roleUsers.length === 0) {
-        await role.delete();
+        await role.deleteOne();
       } else {
         throw new Error("users with this role still exist");  
       }

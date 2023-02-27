@@ -8,7 +8,9 @@
     "dev": "(cd server && yarn dev) & (cd client && yarn start)",
     "build": "(rm -r -d build || true) && (cd server && yarn build && mv build ../) && (cd client && yarn build && mv build ../build/public) && (cd build && (rm -r -d build || true) && cp -R ../server/node_modules ./node_modules)",
     "dev:server": "(cd server && yarn dev)",
-    "test": "",
+    "test:server": "cd server && yarn test",
+    "test:client": "cd client && yarn test --watchAll=false",
+    "test": "yarn test:server && yarn test:client",
     "prod": "MODE_ENV=PROD node ./build/index.js",
     "postinstall": "(cd client && yarn install) && (cd server && yarn install)"
   },
