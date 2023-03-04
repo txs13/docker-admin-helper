@@ -22,3 +22,14 @@ export const loginApiCall = async (
     });
   return processResponse(response);
 };
+
+export const refreshTokenApiCall = async (
+  refreshToken: string
+): Promise<ApiCallResponse> => {
+  const response = await client
+    .post(`${USER_API}/refresh`, {}, { ...OPTIONS_WITH_TOKEN(refreshToken) })
+    .catch((e) => {
+      return processResponse(e.response);
+    });
+  return processResponse(response);
+};

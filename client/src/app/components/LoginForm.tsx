@@ -15,18 +15,28 @@ import {
   FormsNames,
   LocalizedTextResources,
 } from "../../resources/getTextResources.types";
-import { RootState } from "../../store/store";
+import store, { RootState } from "../../store/store";
 import styles from "./LoginForm.styles";
+import { loginService } from "../../store/storeServices/sessionServices";
+import { LoginInput } from "../../store/features/appState.types";
+import { validateResoucesAsync } from "../../validation/validateResources";
+import {
+  loginDataSchema,
+  LoginDataInput,
+} from "../../validation/userAndRoleValidation.scheme";
 
-const initialFormState: {
-  email: string;
+interface FormValidationErrors {
   emailError: string;
-  password: string;
   passwordError: string;
+}
+
+interface FormState extends FormValidationErrors, LoginInput {
   alertMessage: string;
   alertType: "error" | "info";
   rememberMe: boolean;
-} = {
+}
+
+const initialFormState: FormState = {
   email: "",
   emailError: "",
   password: "",
@@ -54,8 +64,8 @@ const LoginForm: React.FunctionComponent = () => {
   }, [textRes, appLanguage]);
 
   // form state variable --------------------------------------------------------
-  const [formState, setFormState] = useState(initialFormState);
-  
+  const [formState, setFormState] = useState<FormState>(initialFormState);
+
   // form state change handler
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
@@ -90,6 +100,46 @@ const LoginForm: React.FunctionComponent = () => {
 
   // get local settings store ---------------------------------------------------
 
+  // login button click handler
+  const loginClickHandler = async () => {
+    const loginInput: LoginDataInput = {
+      email: formState.email,
+      password: formState.password,
+    };
+    // validate input data
+    const errors: any[] = await validateResoucesAsync(
+      loginDataSchema,
+      loginInput
+    );
+    if (!errors) {
+      // if no errors proceed with login
+      console.log(formState.rememberMe);
+      const result = await loginService(loginInput as LoginInput, formState.rememberMe);
+      const storeAppState = store.getState().appState.value;
+      console.log(storeAppState);
+    } else {
+      // if there are errors - process errors and show relevant messages
+      const errorMessages: FormValidationErrors = {
+        emailError: "",
+        passwordError: "",
+      };
+      errors.forEach((error) => {
+        if (error.path["0"] === "email") {
+          errorMessages.emailError = error.message;
+        }
+        if (error.path["0"] === "password") {
+          errorMessages.passwordError = error.message;
+        }
+      });
+      setFormState({
+        ...formState,
+        ...errorMessages,
+        alertType: "error",
+        alertMessage: textRes.notValidLoginCredentialsMessage,
+      });
+    }
+  };
+
   return (
     <Box sx={styles.loginViewPort}>
       <Alert
@@ -123,6 +173,7 @@ const LoginForm: React.FunctionComponent = () => {
         control={
           <Checkbox
             value={formState.rememberMe}
+            defaultChecked
             onChange={onInputChange}
             name="remember"
           />
@@ -145,7 +196,9 @@ const LoginForm: React.FunctionComponent = () => {
       />
 
       <ButtonGroup sx={styles.buttonsGroup}>
-        <Button sx={styles.loginButton}>{textRes.loginBtnName}</Button>
+        <Button sx={styles.loginButton} onClick={loginClickHandler}>
+          {textRes.loginBtnName}
+        </Button>
       </ButtonGroup>
     </Box>
   );

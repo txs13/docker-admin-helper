@@ -12,8 +12,7 @@ services:
       - NODE_ENV=docker
     volumes:
       - .:/workspace
-      - ~/.gitconfig:/root/.gitconfig
-    command: sleep infinity        
+      - ~/.gitconfig:/root/.gitconfig     
   mongo:
     image: mongo:latest
     stdin_open: true

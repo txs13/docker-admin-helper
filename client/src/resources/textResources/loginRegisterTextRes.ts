@@ -34,4 +34,7 @@ export const loginRegisterTextRes: TextResources = {
   roleInputLabel: {
     EN: "role",
   },
+  notValidLoginCredentialsMessage: {
+    EN: "please enter valid credentials",
+  },
 };

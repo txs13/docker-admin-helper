@@ -44,7 +44,7 @@ const OPTIONS_WITH_TOKEN = (token: string) => {
 
 export interface ApiCallResponse {
   data: any;
-  error?: boolean;
+  error: boolean;
 }
 
 const apiCallWithAuth = async (
@@ -52,8 +52,9 @@ const apiCallWithAuth = async (
   secondCall = false
 ): Promise<ApiCallResponse | Function> => {
   const response = await apiFunction();
+  console.log(response);
   if (response.status === 200 || response.status === 201) {
-    return { data: response.body };
+    return { data: response.data, error: false };
   } else if (response.status === 401 && !secondCall) {
     // refresh token
     // TODO: call refresh token service
@@ -69,7 +70,7 @@ const processResponse = (response?: any): ApiCallResponse => {
   
   // api call was successful
   if (response && (response.status === 200 || response.status === 201)) {
-    return { data: response.data };
+    return { error: false, data: response.data };
   }
 
   // api call was NOT successful
