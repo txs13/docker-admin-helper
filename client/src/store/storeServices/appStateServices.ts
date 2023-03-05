@@ -29,11 +29,7 @@ export const readUpdateCookiesData = () => {
   if (localCookiesData) {
     try {
       const cookiesData = JSON.parse(localCookiesData);
-      if (cookiesData instanceof cookiesData) {
-        store.dispatch(
-          updateAppState({ ...appState, cookiesData: cookiesData })
-        );
-      }
+      store.dispatch(updateAppState({ ...appState, cookiesData: cookiesData }));
     } catch (e) {
       localStorage.removeItem("appStateCookiesData");
     }

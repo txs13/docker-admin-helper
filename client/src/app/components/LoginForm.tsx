@@ -63,6 +63,15 @@ const LoginForm: React.FunctionComponent = () => {
     }
   }, [textRes, appLanguage]);
 
+  // set email if it is stored in cookies
+  useEffect(() => {
+    const appCookies = store.getState().appState.value.cookiesData;
+    if (appCookies?.storedEmail) {
+      setFormState({...formState, email: appCookies.storedEmail});
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // form state variable --------------------------------------------------------
   const [formState, setFormState] = useState<FormState>(initialFormState);
 
@@ -140,6 +149,14 @@ const LoginForm: React.FunctionComponent = () => {
     }
   };
 
+  const onDownEnter: React.FormEventHandler = (
+    e: React.KeyboardEvent<HTMLElement>
+  ) => {
+    if (e.key === "Enter") {
+      loginClickHandler();
+    }
+  };
+
   return (
     <Box sx={styles.loginViewPort}>
       <Alert
@@ -165,6 +182,7 @@ const LoginForm: React.FunctionComponent = () => {
         helperText={formState.emailError}
         FormHelperTextProps={{ error: true }}
         error={formState.emailError === "" ? false : true}
+        onKeyDown={onDownEnter}
       />
 
       <FormControlLabel
@@ -193,6 +211,7 @@ const LoginForm: React.FunctionComponent = () => {
         helperText={formState.passwordError}
         FormHelperTextProps={{ error: true }}
         error={formState.passwordError === "" ? false : true}
+        onKeyDown={onDownEnter}
       />
 
       <ButtonGroup sx={styles.buttonsGroup}>
