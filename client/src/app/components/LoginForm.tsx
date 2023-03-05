@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { getTextResources } from "../../resources/getTextResources";
 import {
@@ -19,11 +20,12 @@ import store, { RootState } from "../../store/store";
 import styles from "./LoginForm.styles";
 import { loginService } from "../../store/storeServices/sessionServices";
 import { LoginInput } from "../../store/features/appState.types";
-import { validateResoucesAsync } from "../../validation/validateResources";
+import { validateResourcesAsync } from "../../validation/validateResources";
 import {
   loginDataSchema,
   LoginDataInput,
 } from "../../validation/userAndRoleValidation.scheme";
+import emailToPath from "../utils/emailToPath";
 
 interface FormValidationErrors {
   emailError: string;
@@ -47,6 +49,7 @@ const initialFormState: FormState = {
 };
 
 const LoginForm: React.FunctionComponent = () => {
+  const navigate = useNavigate();
   // set email and password input references
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
@@ -67,9 +70,9 @@ const LoginForm: React.FunctionComponent = () => {
   useEffect(() => {
     const appCookies = store.getState().appState.value.cookiesData;
     if (appCookies?.storedEmail) {
-      setFormState({...formState, email: appCookies.storedEmail});
+      setFormState({ ...formState, email: appCookies.storedEmail });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // form state variable --------------------------------------------------------
@@ -116,16 +119,28 @@ const LoginForm: React.FunctionComponent = () => {
       password: formState.password,
     };
     // validate input data
-    const errors: any[] = await validateResoucesAsync(
+    const errors: any[] = await validateResourcesAsync(
       loginDataSchema,
       loginInput
     );
     if (!errors) {
       // if no errors proceed with login
-      console.log(formState.rememberMe);
-      const result = await loginService(loginInput as LoginInput, formState.rememberMe);
-      const storeAppState = store.getState().appState.value;
-      console.log(storeAppState);
+      const result = await loginService(
+        loginInput as LoginInput,
+        formState.rememberMe
+      );
+      if (!result.error) {
+        const appUser = store.getState().appState.value.currentUser;
+        navigate(`/${emailToPath(appUser)}`);
+      } else {
+        const errorMessage = result.errorMessage === "Invalid email or password" ? textRes.invalidEmailOrPasswordMessage : textRes.unknownLoginErrorMessage;
+        setFormState({
+          ...formState,
+          password: "",
+          alertType: "error",
+          alertMessage: errorMessage,
+        });
+      }
     } else {
       // if there are errors - process errors and show relevant messages
       const errorMessages: FormValidationErrors = {

@@ -1,9 +1,9 @@
-import { UserDocument } from "../store/features/appState.types";
+import { UserDocument } from "../../store/features/appState.types";
 
 // this function is needed in order to convert user email into path string to be included to the browser
 // the situation when function returns null theoretically should never happen, but I decided to include this double check
 
-export const emailToPath = (user: UserDocument | null): string => {
+export const emailToPath = (user: UserDocument | undefined): string => {
   if (!user) {
     return "noname";
   }

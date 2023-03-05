@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import styles from "./LoadingFragment.styles";
 import { RootState } from "../../store/store";
+import emailToPath from "./emailToPath";
 
 interface LoadingFragmentPropsType {
   routing?: boolean;
@@ -21,7 +22,7 @@ const LoadingFragment: React.FunctionComponent<LoadingFragmentPropsType> = ({
   useEffect(() => {
     if (routing) {
       if (appUser)
-        navigate("/app"); // TODO: update this after login is implemented
+        navigate(`/${emailToPath(appUser)}`); // TODO: update this after login is implemented
       else
         navigate("/login-register");  
     }

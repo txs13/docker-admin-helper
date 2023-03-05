@@ -30,7 +30,6 @@ export const updateAllRoles = async () => {
   let usersRoles = store.getState().usersRoles.value;
   let appState = store.getState().appState.value;
   const rolesResponse = await fetchAllRolesApiCall(appState.cookiesData?.accessToken || "wrong token to reset the app");
-  console.log(rolesResponse);
   if (!rolesResponse.error) {
     usersRoles = {
       ...usersRoles,

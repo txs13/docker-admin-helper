@@ -18,7 +18,7 @@ export const loginApiCall = async (
       ...OPTIONS,
     })
     .catch((e) => {
-      return processResponse(e.response);
+      return e.response;
     });
   return processResponse(response);
 };
@@ -29,7 +29,7 @@ export const refreshTokenApiCall = async (
   const response = await client
     .post(`${USER_API}/refresh`, {}, { ...OPTIONS_WITH_TOKEN(refreshToken) })
     .catch((e) => {
-      return processResponse(e.response);
+      return e.response;
     });
   return processResponse(response);
 };

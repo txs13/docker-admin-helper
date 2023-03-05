@@ -5,7 +5,7 @@ import {
   phoneNumberTextRegex,
 } from "../validation/userAndRoleRegexes";
 import { UserDocument } from "../store/features/appState.types";
-import emailToPath from "../utils/emailToPath";
+import emailToPath from "../app/utils/emailToPath";
 
 const nameTestCases = [
   {
@@ -179,7 +179,7 @@ const emailToPathTestCases = [
   { case: { email: "a.b" } as UserDocument, result: "a-b" },
   { case: { email: "a.b!@c.com" } as UserDocument, result: "a-b" },
   { case: { email: "~#!@$%^&*()" } as UserDocument, result: "noname" },
-  { case: null, result: "noname" },
+  { case: undefined, result: "noname" },
 ];
 
 describe("Regexes tests", () => {

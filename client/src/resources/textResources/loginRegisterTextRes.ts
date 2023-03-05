@@ -37,4 +37,10 @@ export const loginRegisterTextRes: TextResources = {
   notValidLoginCredentialsMessage: {
     EN: "please enter valid credentials",
   },
+  invalidEmailOrPasswordMessage: {
+    EN: "Invalid email or password",
+  },
+  unknownLoginErrorMessage: {
+    EN: "Unknown login error"
+  },
 };

@@ -20,7 +20,7 @@ export const loginService = async (
 ): Promise<LoginServiceResponse> => {
   const loginResponse = await loginApiCall(loginInput);
   if (loginResponse.error) {
-    return { error: true };
+    return { error: true, errorMessage: loginResponse.data.message };
   } else {
     // dispatch cookies data
     const cookiesData: CookiesData = {
@@ -48,7 +48,6 @@ export const loginService = async (
 
     // get current role
     const roles = store.getState().usersRoles.value.appRoles;
-    console.log(roles);
     const currentRole = roles?.find((role) => role._id === user.userrole_id);
     storeAppState = { ...storeAppState, currentRole: currentRole };
 

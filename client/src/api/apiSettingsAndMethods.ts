@@ -52,7 +52,6 @@ const apiCallWithAuth = async (
   secondCall = false
 ): Promise<ApiCallResponse | Function> => {
   const response = await apiFunction();
-  console.log(response);
   if (response.status === 200 || response.status === 201) {
     return { data: response.data, error: false };
   } else if (response.status === 401 && !secondCall) {
@@ -67,19 +66,17 @@ const apiCallWithAuth = async (
 };
 
 const processResponse = (response?: any): ApiCallResponse => {
-  
   // api call was successful
   if (response && (response.status === 200 || response.status === 201)) {
     return { error: false, data: response.data };
   }
-
   // api call was NOT successful
   if (response && (response.status === 401 || response.status === 400)) {
-    return { error: true, data: response.data[0] };
+    return { error: true, data: { message: response.data[0].message } };
   }
 
   return { data: { message: "Unknown error" }, error: true };
-}
+};
 
 const client = axios.create({
   baseURL: `http://${HOST}:${PORT}`,

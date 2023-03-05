@@ -17,7 +17,7 @@ export const fetchPublicRolesApiCall = async (): Promise<ApiCallResponse> => {
       ...OPTIONS,
     })
     .catch((e) => {
-      return processResponse(e.response);
+      return e.response;
     });
   return processResponse(response);
 };
@@ -26,9 +26,13 @@ export const fetchAllRolesApiCall = async (
   accessToken: string
 ): Promise<ApiCallResponse> => {
   const response = await apiCallWithAuth(() =>
-    client.get(`${ROLE_API}/allroles`, {
-      ...OPTIONS_WITH_TOKEN(accessToken),
-    })
+    client
+      .get(`${ROLE_API}/allroles`, {
+        ...OPTIONS_WITH_TOKEN(accessToken),
+      })
+      .catch((e) => {
+        return e.response;
+      })
   );
-  return response as ApiCallResponse;
+  return processResponse(response);
 };
