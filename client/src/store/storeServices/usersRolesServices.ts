@@ -1,20 +1,19 @@
 import { updateUsersRoles } from "../features/usersRoles.slice";
-import { LoginInput, RoleDocument } from "../features/appState.types";
+import { RoleDocument } from "../features/appState.types";
 import store from "../store";
-import { loginApiCall } from "../../api/sessionApi";
-import { fetchAllRolesApiCall, fetchPublicRolesApiCall } from "../../api/roleApi";
-
-export const loginService = async (loginInput: LoginInput) => {
-  const loginResponse = await loginApiCall(loginInput);
-
-  if (!loginResponse.error) {
-  } else {
-  }
-};
+import {
+  apiCallHelper,
+  ROLE_API,
+  USER_API,
+} from "../../api/apiSettingsAndMethods";
 
 export const updatePublicRoles = async () => {
   let usersRoles = store.getState().usersRoles.value;
-  const rolesResponse = await fetchPublicRolesApiCall();
+  const rolesResponse = await apiCallHelper({
+    method: "GET",
+    url: `${ROLE_API}`,
+    auth: false
+  });
   if (!rolesResponse.error) {
     usersRoles = {
       ...usersRoles,
@@ -28,8 +27,11 @@ export const updatePublicRoles = async () => {
 
 export const updateAllRoles = async () => {
   let usersRoles = store.getState().usersRoles.value;
-  let appState = store.getState().appState.value;
-  const rolesResponse = await fetchAllRolesApiCall(appState.cookiesData?.accessToken || "wrong token to reset the app");
+  const rolesResponse = await apiCallHelper({
+    method: "GET",
+    url: `${ROLE_API}/allroles`,
+    auth: true
+  });
   if (!rolesResponse.error) {
     usersRoles = {
       ...usersRoles,

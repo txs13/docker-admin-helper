@@ -1,24 +1,48 @@
 import store, { RootState } from "../store";
 import { updateAppState } from "../features/appState.slice";
-import { loginApiCall } from "../../api/sessionApi";
 import {
+  refreshTokenApiCall,
+  apiCallHelper,
+  USER_API,
+} from "../../api/apiSettingsAndMethods";
+import {
+  AppState,
   CookiesData,
   LoginInput,
+  RoleDocument,
   UserDocument,
 } from "../features/appState.types";
-import { updateSaveCookiesData } from "./appStateServices";
-import { updateAllRoles } from "./usersRolesServices";
+import {
+  makeStateLoaded,
+  readUpdateCookiesData,
+  updateSaveCookiesData,
+} from "./appStateServices";
+import { updateAllRoles, updatePublicRoles } from "./usersRolesServices";
 
 interface LoginServiceResponse {
   error: boolean;
   errorMessage?: string;
 }
 
+const getRole = (userrole_id: string): RoleDocument | undefined => {
+  const roles = store.getState().usersRoles.value.appRoles;
+  return roles?.find((role) => role._id === userrole_id);
+};
+
+const generateGlobalErrorAndResetApp = () => {
+  // TODO: generate error and reset app
+};
+
 export const loginService = async (
   loginInput: LoginInput,
   storeEmail: boolean
 ): Promise<LoginServiceResponse> => {
-  const loginResponse = await loginApiCall(loginInput);
+  const loginResponse = await apiCallHelper({
+    method: "POST",
+    url: `${USER_API}/login`,
+    auth: false,
+    objectToSend: loginInput,
+  });
   if (loginResponse.error) {
     return { error: true, errorMessage: loginResponse.data.message };
   } else {
@@ -47,11 +71,13 @@ export const loginService = async (
     }
 
     // get current role
-    const roles = store.getState().usersRoles.value.appRoles;
-    const currentRole = roles?.find((role) => role._id === user.userrole_id);
-    storeAppState = { ...storeAppState, currentRole: currentRole };
-
-    store.dispatch(updateAppState(storeAppState));
+    const currentRole = getRole(user.userrole_id);
+    if (currentRole) {
+      storeAppState = { ...storeAppState, currentRole: currentRole };
+      store.dispatch(updateAppState(storeAppState));
+    } else {
+      // TODO: reset the app
+    }
     return { error: false };
   }
 };
@@ -59,5 +85,54 @@ export const loginService = async (
 export const logoutService = async () => {};
 
 export const refreshTokenService = async () => {
-  const appState = store.getState().appState.value;
+  let appState = store.getState().appState.value;
+  if (appState.cookiesData?.refreshToken) {
+    const refreshResponse = await refreshTokenApiCall(
+      appState.cookiesData?.refreshToken
+    );
+    if (!refreshResponse.error) {
+      const cookiesData: CookiesData = {
+        ...appState.cookiesData,
+        accessToken: refreshResponse.data.accessToken,
+      };
+      store.dispatch(updateAppState({ ...appState, cookiesData: cookiesData }));
+      if (refreshResponse.data.isAdmin) {
+        appState = { ...appState, isAdmin: true };
+        await updateAllRoles();
+      }
+      const currentUser: UserDocument = refreshResponse.data.user;
+      const currentRole = getRole(currentUser.userrole_id);
+      if (currentRole) {
+        appState = {
+          ...appState,
+          currentUser: currentUser,
+          currentRole: currentRole
+        };
+        store.dispatch(updateAppState(appState));
+      } else {
+        generateGlobalErrorAndResetApp();
+      }
+    } else {
+      generateGlobalErrorAndResetApp();
+    }
+  } else {
+    generateGlobalErrorAndResetApp();
+  }
+};
+
+export const startApService = async () => {
+  // fetch public roles
+  await updatePublicRoles();
+
+  // read cookies
+  readUpdateCookiesData();
+
+  // if cookies are there, refresh token and silent login
+  let appState = store.getState().appState.value;
+  if (appState.cookiesData?.refreshToken) {
+    await refreshTokenService();
+  }
+  appState = store.getState().appState.value;
+  // set startup procedures are done
+  makeStateLoaded();
 };

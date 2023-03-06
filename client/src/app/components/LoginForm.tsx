@@ -68,9 +68,17 @@ const LoginForm: React.FunctionComponent = () => {
 
   // set email if it is stored in cookies
   useEffect(() => {
-    const appCookies = store.getState().appState.value.cookiesData;
-    if (appCookies?.storedEmail) {
-      setFormState({ ...formState, email: appCookies.storedEmail });
+    const appState = store.getState().appState.value;
+    if (appState.currentUser) {
+      // if user is already logged in, forward to app starting page
+      navigate(`/${emailToPath(appState.currentUser)}`);
+    } else if (appState.cookiesData?.storedEmail) {
+      // if there is stored email, set it and move focus to password
+      setFormState({ ...formState, email: appState.cookiesData.storedEmail });
+      passwordInputRef.current?.focus();
+    } else {
+      // if no email stored in cookies, set focus to email field 
+      emailInputRef.current?.focus();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -109,8 +117,6 @@ const LoginForm: React.FunctionComponent = () => {
         throw new Error("wrong input element(s) name property");
     }
   };
-
-  // get local settings store ---------------------------------------------------
 
   // login button click handler
   const loginClickHandler = async () => {

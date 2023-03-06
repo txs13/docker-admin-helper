@@ -1,4 +1,6 @@
 import axios from "axios";
+import store from "../store/store";
+import { refreshTokenService } from "../store/storeServices/sessionServices";
 
 // the strategy is to take user values if useUserValues is true
 // if not, browser server and port are going to taken for data fetching
@@ -56,7 +58,7 @@ const apiCallWithAuth = async (
     return { data: response.data, error: false };
   } else if (response.status === 401 && !secondCall) {
     // refresh token
-    // TODO: call refresh token service
+    await refreshTokenService();
     return await apiCallWithAuth(apiFunction, true);
   } else if (response.status === 401 && secondCall) {
     // return expired token message
@@ -65,13 +67,14 @@ const apiCallWithAuth = async (
   return { data: { message: "Unknown error" }, error: true };
 };
 
-const processResponse = (response?: any): ApiCallResponse => {
+const processResponse = (response: any): ApiCallResponse => {
   // api call was successful
-  if (response && (response.status === 200 || response.status === 201)) {
+  if (response.status === 200 || response.status === 201)
+  {
     return { error: false, data: response.data };
   }
   // api call was NOT successful
-  if (response && (response.status === 401 || response.status === 400)) {
+  if (response.status === 401 || response.status === 400) {
     return { error: true, data: { message: response.data[0].message } };
   }
 
@@ -83,6 +86,103 @@ const client = axios.create({
   timeout: 1000,
 });
 
+interface ApiCallHelperProps {
+  method: "GET" | "PUT" | "DELETE" | "POST";
+  url: string;
+  auth: boolean;
+  objectToSend?: object;
+}
+
+const apiCallHelper = async ({
+  method,
+  url,
+  auth,
+  objectToSend = {},
+}: ApiCallHelperProps): Promise<ApiCallResponse> => {
+  let cookiesData = store.getState().appState.value.cookiesData;
+  let response;
+  switch (method) {
+    case "GET":
+      response = await client
+        .get( url, auth ? { ...OPTIONS_WITH_TOKEN(cookiesData?.accessToken as string) } : { ...OPTIONS } )
+        .catch((e) => { return e.response; });
+      if (response.status === 200 || response.status === 201) {
+        return processResponse(response);
+      } else if ((response.status === 401 || response.status === 400) && auth) {
+        await refreshTokenService();
+        cookiesData = store.getState().appState.value.cookiesData;
+        response =  await client
+          .get( url, auth ? { ...OPTIONS_WITH_TOKEN(cookiesData?.accessToken as string) } : { ...OPTIONS } )
+          .catch((e) => { return e.response; });
+        return processResponse(response);  
+      } else {
+        return processResponse(response);
+      }
+
+    case "PUT":
+      response = await client
+        .put( url, {...objectToSend}, auth ? { ...OPTIONS_WITH_TOKEN(cookiesData?.accessToken as string) } : { ...OPTIONS } )
+        .catch((e) => { return e.response; });
+      if (response.status === 200 || response.status === 201) {
+        return processResponse(response);
+      } else if ((response.status === 401 || response.status === 400) && auth) {
+        await refreshTokenService();
+        cookiesData = store.getState().appState.value.cookiesData;
+        response = await client
+          .put( url, {...objectToSend}, auth ? { ...OPTIONS_WITH_TOKEN(cookiesData?.accessToken as string) } : { ...OPTIONS } )
+          .catch((e) => { return e.response; });
+        return processResponse(response);
+      } else {
+        return processResponse(response);
+      }
+
+    case "POST":
+      response = await client
+        .post( url, {...objectToSend}, auth ? { ...OPTIONS_WITH_TOKEN(cookiesData?.accessToken as string) } : { ...OPTIONS } )
+        .catch((e) => { return e.response; });
+      if (response.status === 200 || response.status === 201) {
+        return processResponse(response);
+      } else if ((response.status === 401 || response.status === 400) && auth) {
+        await refreshTokenService();
+        cookiesData = store.getState().appState.value.cookiesData;
+        response = await client
+          .post( url, {...objectToSend}, auth ? { ...OPTIONS_WITH_TOKEN(cookiesData?.accessToken as string) } : { ...OPTIONS } )
+          .catch((e) => { return e.response; });
+        return processResponse(response);  
+      } else {
+        return processResponse(response);
+      }
+
+    case "DELETE":
+      response = await client
+        .delete( url, auth ? { ...OPTIONS_WITH_TOKEN(cookiesData?.accessToken as string) } : { ...OPTIONS } )
+        .catch((e) => { return e.response; });
+      if (response.status === 200 || response.status === 201) {
+        return processResponse(response);
+      } else if ((response.status === 401 || response.status === 400) && auth) {
+        await refreshTokenService();
+        cookiesData = store.getState().appState.value.cookiesData;
+        response = await client
+          .delete( url, auth ? { ...OPTIONS_WITH_TOKEN(cookiesData?.accessToken as string) } : { ...OPTIONS } )
+          .catch((e) => { return e.response; });
+        return processResponse(response);  
+      } else {
+        return processResponse(response);
+      }
+  }
+};
+
+const refreshTokenApiCall = async (
+  refreshToken: string
+): Promise<ApiCallResponse> => {
+  const response = await client
+    .post(`${USER_API}/refresh`, {}, { ...OPTIONS_WITH_TOKEN(refreshToken) })
+    .catch((e) => {
+      return e.response;
+    });
+  return processResponse(response);
+};
+
 export {
   HOST,
   PORT,
@@ -90,7 +190,7 @@ export {
   ROLE_API,
   OPTIONS,
   OPTIONS_WITH_TOKEN,
-  apiCallWithAuth,
-  processResponse,
+  apiCallHelper,
+  refreshTokenApiCall,
   client,
 };

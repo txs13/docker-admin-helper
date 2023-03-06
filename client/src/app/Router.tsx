@@ -10,17 +10,18 @@ import LoginRegisterRoute from "./routes/LoginRegisterRoute";
 import LoadingFragment from "./utils/LoadingFragment";
 import emailToPath from "./utils/emailToPath";
 import ProtectedRoute, { ProtectedRouteProps } from "./utils/ProtectedRoute";
+import { AppState } from "../store/features/appState.types";
 
 const Router: React.FunctionComponent = () => {
-  const appState = useSelector((state: RootState) => state.appState.value);
-
+  const currentUser = useSelector((state: RootState) => state.appState.value.currentUser);
+  const isAdmin = useSelector((state:RootState) => state.appState.value.isAdmin);
   const defaultProtectedRouteProps: Omit<ProtectedRouteProps, "outlet"> = {
-    isAuthenticated: appState.currentUser ? true : false,
-    authenticationPath: "/login",
+    isAuthenticated: currentUser ? true : false,
+    authenticationPath: "/login-register",
   };
 
   const defaultAdminProtectedRouteProps: Omit<ProtectedRouteProps, "outlet"> = {
-    isAuthenticated: appState.currentUser && appState.isAdmin ? true : false,
+    isAuthenticated: currentUser && isAdmin ? true : false,
     authenticationPath: "/",
   };
 
@@ -34,7 +35,7 @@ const Router: React.FunctionComponent = () => {
       <Route path="/login-register" element={<LoginRegisterRoute />}></Route>
 
       <Route
-        path={generatePath("/:id", { id: emailToPath(appState.currentUser) })}
+        path={generatePath("/:id", { id: emailToPath(currentUser) })}
         element={
           <ProtectedRoute
             {...defaultProtectedRouteProps}
