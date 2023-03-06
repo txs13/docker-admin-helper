@@ -49,24 +49,6 @@ export interface ApiCallResponse {
   error: boolean;
 }
 
-const apiCallWithAuth = async (
-  apiFunction: Function,
-  secondCall = false
-): Promise<ApiCallResponse | Function> => {
-  const response = await apiFunction();
-  if (response.status === 200 || response.status === 201) {
-    return { data: response.data, error: false };
-  } else if (response.status === 401 && !secondCall) {
-    // refresh token
-    await refreshTokenService();
-    return await apiCallWithAuth(apiFunction, true);
-  } else if (response.status === 401 && secondCall) {
-    // return expired token message
-    return { data: response.body, error: true };
-  }
-  return { data: { message: "Unknown error" }, error: true };
-};
-
 const processResponse = (response: any): ApiCallResponse => {
   // api call was successful
   if (response.status === 200 || response.status === 201)
@@ -184,13 +166,8 @@ const refreshTokenApiCall = async (
 };
 
 export {
-  HOST,
-  PORT,
   USER_API,
   ROLE_API,
-  OPTIONS,
-  OPTIONS_WITH_TOKEN,
   apiCallHelper,
   refreshTokenApiCall,
-  client,
 };
