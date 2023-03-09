@@ -1,5 +1,8 @@
-import store, { RootState } from "../store";
-import { updateAppState } from "../features/appState.slice";
+import store from "../store";
+import {
+  resetAppState,
+  updateAppState,
+} from "../features/appState.slice";
 import { CookiesData } from "../features/appState.types";
 
 export const makeStateLoading = () => {
@@ -19,7 +22,9 @@ export const updateSaveCookiesData = (cookiesData: CookiesData) => {
   let appState = store.getState().appState.value;
   appState = { ...appState, cookiesData: cookiesData };
   store.dispatch(updateAppState(appState));
-  localStorage.setItem("appStateCookiesData", JSON.stringify(cookiesData));
+  let localCookiesData = { ...cookiesData };
+  if (localCookiesData.accessToken) delete localCookiesData.accessToken;
+  localStorage.setItem("appStateCookiesData", JSON.stringify(localCookiesData));
 };
 
 // read local storage and update store app state
@@ -33,5 +38,26 @@ export const readUpdateCookiesData = () => {
     } catch (e) {
       localStorage.removeItem("appStateCookiesData");
     }
+  }
+};
+
+// logout store reset
+export const logoutStoreReset = () => {
+  store.dispatch(resetAppState());
+};
+
+// logout cookies cleanup
+export const logoutCookiesCleanup = () => {
+  let appState = store.getState().appState.value;
+  if (appState.cookiesData?.storedEmail) {
+    const localCookiesData: CookiesData = {
+      storedEmail: appState.cookiesData?.storedEmail,
+    };
+    localStorage.setItem(
+      "appStateCookiesData",
+      JSON.stringify(localCookiesData)
+    );
+  } else {
+    localStorage.removeItem("appStateCookiesData");
   }
 };

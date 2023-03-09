@@ -15,7 +15,7 @@ export const appStateSlice = createSlice({
     updateAppState: (state, action) => {
       state.value = action.payload;
     },
-    resetAppState: (state, action) => {
+    resetAppState: (state) => {
       state.value = initialValue;
     },
   },

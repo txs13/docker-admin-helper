@@ -13,6 +13,8 @@ import {
   UserDocument,
 } from "../features/appState.types";
 import {
+  logoutCookiesCleanup,
+  logoutStoreReset,
   makeStateLoaded,
   readUpdateCookiesData,
   updateSaveCookiesData,
@@ -82,7 +84,25 @@ export const loginService = async (
   }
 };
 
-export const logoutService = async () => {};
+export const logoutService = async () => {
+  // close the session if possible
+  await apiCallHelper({
+    method: "POST",
+    url: `${USER_API}/logout`,
+    auth: true
+  });
+
+  // cleanup cookies
+  logoutCookiesCleanup();
+
+  // reset roles and fetch only public roles
+  // TODO: clear all the features (users, hosts, etc.) after its implementation
+  await updatePublicRoles();
+
+  // reset appState store
+  logoutStoreReset();
+
+};
 
 export const refreshTokenService = async () => {
   let appState = store.getState().appState.value;
@@ -105,6 +125,7 @@ export const refreshTokenService = async () => {
       if (currentRole) {
         appState = {
           ...appState,
+          cookiesData: cookiesData,
           currentUser: currentUser,
           currentRole: currentRole
         };

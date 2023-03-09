@@ -13,6 +13,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import CoPresentTwoToneIcon from "@mui/icons-material/CoPresentTwoTone";
+import { useNavigate } from "react-router-dom";
 
 import { RootState } from "../store/store";
 import styles from "./AppNavbar.styles";
@@ -21,6 +22,8 @@ import {
   FormsNames,
   LocalizedTextResources,
 } from "../resources/getTextResources.types";
+import { logoutService } from "../store/storeServices/sessionServices";
+import { makeStateLoaded, makeStateLoading, readUpdateCookiesData } from "../store/storeServices/appStateServices";
 
 enum MenuItemKeys {SETTINGS, PROFILE, LOGIN_REGISTER, LOGOUT, ABOUT}
 
@@ -30,6 +33,8 @@ interface MenuItemType {
 }
 
 const AppNavbar: React.FunctionComponent = () => {
+  const navigate = useNavigate();
+
   const appUser = useSelector(
     (state: RootState) => state.appState.value.currentUser
   );
@@ -46,19 +51,23 @@ const AppNavbar: React.FunctionComponent = () => {
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElMenu(event.currentTarget);
   };
-  const handleCloseMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleCloseMenu = async (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElMenu(null);
     if ((event.target as HTMLElement).id) {
         const id = Number((event.target as HTMLElement).id);
         switch (id) {
           case MenuItemKeys.LOGIN_REGISTER:
-            console.log("login-register");
+            navigate("/login-register");
             break;
           case MenuItemKeys.ABOUT:
-            console.log("about");
+            navigate("/about");
             break;
           case MenuItemKeys.LOGOUT:
-            console.log("logout");
+            makeStateLoading();
+            await logoutService();
+            readUpdateCookiesData();
+            makeStateLoaded();
+            navigate("/");
             break;
           case MenuItemKeys.SETTINGS:
             console.log("settings");
@@ -76,7 +85,7 @@ const AppNavbar: React.FunctionComponent = () => {
         setTextRes(updTextRes);
     }
 
-    if (appUser) {
+    if (!appUser) {
       setMenuItems([
         { key: MenuItemKeys.LOGIN_REGISTER, text: textRes.loginRegisterMenuitem || " " },
         { key: MenuItemKeys.ABOUT, text: textRes.aboutMenuitem || " " },
@@ -116,7 +125,7 @@ const AppNavbar: React.FunctionComponent = () => {
               color="inherit"
               onClick={handleMenu}
             >
-              <AccountCircle fontSize="large"/>
+              <AccountCircle fontSize="large" />
             </IconButton>
             <Menu
               sx={{ mt: "45px" }}
@@ -143,10 +152,16 @@ const AppNavbar: React.FunctionComponent = () => {
               ))}
             </Menu>
 
-            <Button sx={styles.button} variant="outlined">
+            <Button
+              sx={{ ...styles.button, display: appUser ? "" : "none" }}
+              variant="outlined"
+            >
               App Button 2
             </Button>
-            <Button sx={styles.button} variant="outlined">
+            <Button
+              sx={{ ...styles.button, display: appUser ? "" : "none" }}
+              variant="outlined"
+            >
               App Button 1
             </Button>
           </Box>
