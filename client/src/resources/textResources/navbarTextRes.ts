@@ -17,6 +17,12 @@ export const navbarTextRes: TextResources = {
     EN: "Logout",
   },
   aboutMenuitem: {
-    EN: "About App"
-  }
+    EN: "About App",
+  },
+  adminPanelMenuItem: {
+    EN: "Admin panel",
+  },
+  appStartingPageMenuItem: {
+    EN: "App starting page"
+  },
 };

@@ -24,8 +24,9 @@ import {
 } from "../resources/getTextResources.types";
 import { logoutService } from "../store/storeServices/sessionServices";
 import { makeStateLoaded, makeStateLoading, readUpdateCookiesData } from "../store/storeServices/appStateServices";
+import emailToPath from "./utils/emailToPath";
 
-enum MenuItemKeys {SETTINGS, PROFILE, LOGIN_REGISTER, LOGOUT, ABOUT}
+enum MenuItemKeys {SETTINGS, PROFILE, LOGIN_REGISTER, LOGOUT, ABOUT, ADMIN_PANEL, APP_STARTING_PAGE}
 
 interface MenuItemType {
   key: MenuItemKeys;
@@ -35,8 +36,8 @@ interface MenuItemType {
 const AppNavbar: React.FunctionComponent = () => {
   const navigate = useNavigate();
 
-  const appUser = useSelector(
-    (state: RootState) => state.appState.value.currentUser
+  const appState = useSelector(
+    (state: RootState) => state.appState.value
   );
   const appLanguage = useSelector(
     (state: RootState) => state.appState.value.appLanguage
@@ -75,6 +76,12 @@ const AppNavbar: React.FunctionComponent = () => {
           case MenuItemKeys.PROFILE:
             console.log("profile");
             break;
+          case MenuItemKeys.ADMIN_PANEL:
+            navigate("/adminpanel");
+            break;
+          case MenuItemKeys.APP_STARTING_PAGE:
+            navigate(`/${emailToPath(appState.currentUser)}`);
+            break;  
         }
     }
   };
@@ -85,19 +92,29 @@ const AppNavbar: React.FunctionComponent = () => {
         setTextRes(updTextRes);
     }
 
-    if (!appUser) {
+    if (!appState.currentUser) {
       setMenuItems([
         { key: MenuItemKeys.LOGIN_REGISTER, text: textRes.loginRegisterMenuitem || " " },
         { key: MenuItemKeys.ABOUT, text: textRes.aboutMenuitem || " " },
       ]);
     } else {
-      setMenuItems([
-        { key: MenuItemKeys.PROFILE, text: textRes.profileMenuItem || " " },
-        { key: MenuItemKeys.SETTINGS, text: textRes.settingsMenuItem || " " },
-        { key: MenuItemKeys.LOGOUT, text: textRes.logoutMenuItem || " " },
-      ]);
+      if (appState.isAdmin) {
+        setMenuItems([
+          {key: MenuItemKeys.APP_STARTING_PAGE, text: textRes.appStartingPageMenuItem},
+          { key: MenuItemKeys.ADMIN_PANEL, text: textRes.adminPanelMenuItem},
+          { key: MenuItemKeys.PROFILE, text: textRes.profileMenuItem || " " },
+          { key: MenuItemKeys.SETTINGS, text: textRes.settingsMenuItem || " " },
+          { key: MenuItemKeys.LOGOUT, text: textRes.logoutMenuItem || " " },
+        ]);
+      } else {
+        setMenuItems([
+          { key: MenuItemKeys.PROFILE, text: textRes.profileMenuItem || " " },
+          { key: MenuItemKeys.SETTINGS, text: textRes.settingsMenuItem || " " },
+          { key: MenuItemKeys.LOGOUT, text: textRes.logoutMenuItem || " " },
+        ]);
+      }
     }
-  }, [appUser, textRes, appLanguage]);
+  }, [appState, textRes, appLanguage]);
 
   return (
     <AppBar position="static">
@@ -153,13 +170,13 @@ const AppNavbar: React.FunctionComponent = () => {
             </Menu>
 
             <Button
-              sx={{ ...styles.button, display: appUser ? "" : "none" }}
+              sx={{ ...styles.button, display: appState.currentUser ? "" : "none" }}
               variant="outlined"
             >
               App Button 2
             </Button>
             <Button
-              sx={{ ...styles.button, display: appUser ? "" : "none" }}
+              sx={{ ...styles.button, display: appState.currentUser ? "" : "none" }}
               variant="outlined"
             >
               App Button 1

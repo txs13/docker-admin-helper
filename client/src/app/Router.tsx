@@ -11,10 +11,15 @@ import LoadingFragment from "./utils/LoadingFragment";
 import emailToPath from "./utils/emailToPath";
 import ProtectedRoute, { ProtectedRouteProps } from "./utils/ProtectedRoute";
 import { AppState } from "../store/features/appState.types";
+import AdminRoute from "./routes/AdminRoute";
 
 const Router: React.FunctionComponent = () => {
-  const currentUser = useSelector((state: RootState) => state.appState.value.currentUser);
-  const isAdmin = useSelector((state:RootState) => state.appState.value.isAdmin);
+  const currentUser = useSelector(
+    (state: RootState) => state.appState.value.currentUser
+  );
+  const isAdmin = useSelector(
+    (state: RootState) => state.appState.value.isAdmin
+  );
   const defaultProtectedRouteProps: Omit<ProtectedRouteProps, "outlet"> = {
     isAuthenticated: currentUser ? true : false,
     authenticationPath: "/login-register",
@@ -43,6 +48,16 @@ const Router: React.FunctionComponent = () => {
           />
         }
       ></Route>
+
+      <Route
+        path="adminpanel"
+        element={
+          <ProtectedRoute
+            {...defaultAdminProtectedRouteProps}
+            outlet={<AdminRoute />}
+          />
+        }
+      />
 
       <Route path="/*" element={<ErrorRoute />}></Route>
     </Routes>
