@@ -31,8 +31,18 @@ const getRole = (userrole_id: string): RoleDocument | undefined => {
   return roles?.find((role) => role._id === userrole_id);
 };
 
-const generateGlobalErrorAndResetApp = () => {
-  // TODO: generate error and reset app
+const generateGlobalErrorAndResetApp = async () => {
+  // TODO: generate error
+  
+  // cleanup cookies
+  logoutCookiesCleanup();
+
+  // reset roles and fetch only public roles
+  // TODO: clear all the features (users, hosts, etc.) after its implementation
+  await updatePublicRoles();
+
+  // reset appState store
+  logoutStoreReset();
 };
 
 export const loginService = async (
@@ -131,13 +141,13 @@ export const refreshTokenService = async () => {
         };
         store.dispatch(updateAppState(appState));
       } else {
-        generateGlobalErrorAndResetApp();
+        await generateGlobalErrorAndResetApp();
       }
     } else {
-      generateGlobalErrorAndResetApp();
+      await generateGlobalErrorAndResetApp();
     }
   } else {
-    generateGlobalErrorAndResetApp();
+    await generateGlobalErrorAndResetApp();
   }
 };
 

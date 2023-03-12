@@ -11,21 +11,21 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { getTextResources } from "../../resources/getTextResources";
+import { getTextResources } from "../../../resources/getTextResources";
 import {
   FormsNames,
   LocalizedTextResources,
-} from "../../resources/getTextResources.types";
-import store, { RootState } from "../../store/store";
+} from "../../../resources/getTextResources.types";
+import store, { RootState } from "../../../store/store";
 import styles from "./LoginForm.styles";
-import { loginService } from "../../store/storeServices/sessionServices";
-import { LoginInput } from "../../store/features/appState.types";
-import { validateResourcesAsync } from "../../validation/validateResources";
+import { loginService } from "../../../store/storeServices/sessionServices";
+import { LoginInput } from "../../../store/features/appState.types";
+import { validateResourcesAsync } from "../../../validation/validateResources";
 import {
   loginDataSchema,
   LoginDataInput,
-} from "../../validation/userAndRoleValidation.scheme";
-import emailToPath from "../utils/emailToPath";
+} from "../../../validation/userAndRoleValidation.scheme";
+import emailToPath from "../../utils/emailToPath";
 
 interface FormValidationErrors {
   emailError: string;

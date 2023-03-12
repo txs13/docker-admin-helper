@@ -2,9 +2,12 @@ import { Alert, Box, Button, ButtonGroup, MenuItem, TextField, Typography } from
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { getTextResources } from "../../resources/getTextResources";
-import { FormsNames, LocalizedTextResources } from "../../resources/getTextResources.types";
-import { RootState } from "../../store/store";
+import { getTextResources } from "../../../resources/getTextResources";
+import {
+  FormsNames,
+  LocalizedTextResources,
+} from "../../../resources/getTextResources.types";
+import { RootState } from "../../../store/store";
 import styles from "./RegisterForm.styles";
 
 const initialFormState: {

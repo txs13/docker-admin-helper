@@ -11,8 +11,8 @@ import {
 } from "../../resources/getTextResources.types";
 import { RootState } from "../../store/store";
 import { getTextResources } from "../../resources/getTextResources";
-import LoginForm from "../components/LoginForm";
-import RegisterForm from "../components/RegisterForm";
+import LoginForm from "../components/LoginRegisterComponents/LoginForm";
+import RegisterForm from "../components/LoginRegisterComponents/RegisterForm";
 
 const LoginRegisterRoute: React.FunctionComponent = () => {
   const theme = useTheme();

@@ -50,7 +50,25 @@ const Router: React.FunctionComponent = () => {
       ></Route>
 
       <Route
-        path="adminpanel"
+        path="/adminpanel"
+        element={
+          <ProtectedRoute
+            {...defaultAdminProtectedRouteProps}
+            outlet={<AdminRoute />}
+          />
+        }
+      />
+      <Route
+        path="/adminpanel/roles"
+        element={
+          <ProtectedRoute
+            {...defaultAdminProtectedRouteProps}
+            outlet={<AdminRoute />}
+          />
+        }
+      />
+      <Route
+        path="/adminpanel/users"
         element={
           <ProtectedRoute
             {...defaultAdminProtectedRouteProps}

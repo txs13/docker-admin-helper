@@ -1,4 +1,4 @@
-import { ComponentStylesType } from "../ComponentStylesType";
+import { ComponentStylesType } from "../../ComponentStylesType";
 
 const styles: ComponentStylesType = {
   loginViewPort: {
@@ -11,29 +11,18 @@ const styles: ComponentStylesType = {
   emailInput: {
     width: "100%",
   },
+  checkbox: {},
   passwordInput: {
-    width: "100%",
-  },
-  confirmPasswordInput: {
-    width: "100%",
-  },
-  nameInput: {
-    width: "100%",
-  },
-  familyNameInput: {
-    width: "100%",
-  },
-  roleInput: {
     width: "100%",
   },
   buttonsGroup: {
     width: "100%",
-    paddingTop: "20px;",
+    paddingTop: "20px;"
   },
-  registerButton: {
+  loginButton: {
     marginRight: "auto",
     marginLeft: "auto",
-    width: "50%",
+    width: "50%"
   },
 };
 
