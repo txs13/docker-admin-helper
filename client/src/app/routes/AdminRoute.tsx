@@ -20,10 +20,6 @@ const AdminRoute: React.FunctionComponent = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(location);
-  }, [location]);
-
   // tabs handling code ---------------------------------------------------------
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     if (newValue !== location.pathname) navigate(newValue);
@@ -60,14 +56,14 @@ const AdminRoute: React.FunctionComponent = () => {
               <StartingFragment />
             </Box>
           </TabPanel>
-          <TabPanel value="/adminpanel/users">
-            <Box>
-              <UsersFragment />
-            </Box>
-          </TabPanel>
           <TabPanel value="/adminpanel/roles">
             <Box>
               <RolesFragment />
+            </Box>
+          </TabPanel>
+          <TabPanel value="/adminpanel/users">
+            <Box>
+              <UsersFragment />
             </Box>
           </TabPanel>
         </Box>
