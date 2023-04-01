@@ -1,5 +1,5 @@
 import { Box, Toolbar, Typography } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -11,6 +11,9 @@ import {
 import { RoleDocument } from "../../../store/features/appState.types";
 import { RootState } from "../../../store/store";
 import styles from "./RolesFragment.styles";
+import RoleForm from "../UserRoleComponents/RoleForm";
+import { handleModalOpen } from "../../../store/storeServices/modalStateServices";
+import { ModalForms } from "../../../store/features/modalState.types";
 
 const RolesFragment: React.FunctionComponent = () => {
   // text resources handling code -----------------------------------------------
@@ -31,37 +34,67 @@ const RolesFragment: React.FunctionComponent = () => {
   );
 
   const columns: GridColDef[] = [
-    { field: "_id", headerName: textRes.idTableColumnHeader },
+    {
+      field: "_id",
+      headerName: textRes.idTableColumnHeader,
+      minWidth: 150,
+      align: "left",
+      headerAlign: "center",
+    },
     {
       field: "role",
       headerName: textRes.roleTableColumnHeader,
+      minWidth: 150,
+      align: "left",
+      headerAlign: "center",
     },
     {
       field: "description",
       headerName: textRes.descriptionTableColumnHeader,
+      minWidth: 300,
+      align: "left",
+      headerAlign: "center",
     },
     {
       field: "createdAt",
       headerName: textRes.createdAtTableColumnHeader,
+      minWidth: 200,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "updatedAt",
       headerName: textRes.updatedAtTableColumnHeader,
+      minWidth: 200,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "__v",
       type: "number",
       headerName: textRes.versionTableColumnHeader,
+      minWidth: 50,
+      align: "center",
+      headerAlign: "center",
     },
   ];
+
+  const handleRowClick: GridEventListener<"rowClick"> = (params) => {
+    handleModalOpen(ModalForms.ROLE_FORM, { id: params.row._id });
+  };
 
   return (
     <Box sx={styles.viewPort}>
       <Typography>{textRes.rolesTabHeader}</Typography>
       <Toolbar></Toolbar>
       <DataGrid
+      sx={styles.grid}
+      slots={{}}
+      slotProps={{}}
+        onRowClick={handleRowClick}
         getRowId={(row: RoleDocument) => row?._id}
         columns={columns}
+        sortModel={[{ field: "role", sort: "asc" }]}
         rows={roles || []}
         autoHeight
       />

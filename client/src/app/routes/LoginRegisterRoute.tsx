@@ -16,7 +16,7 @@ import RegisterForm from "../components/LoginRegisterComponents/RegisterForm";
 
 const LoginRegisterRoute: React.FunctionComponent = () => {
   const theme = useTheme();
-  // tabs handling code ---------------------------------------------------------
+  // handling tabs --------------------------------------------------------------
   const [tabValue, setTabValue] = useState("1");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabValue(newValue);

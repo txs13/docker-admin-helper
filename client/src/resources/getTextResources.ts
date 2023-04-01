@@ -13,6 +13,7 @@ import { navbarTextRes } from "./textResources/navbarTextRes";
 import { appGeneralTextRes } from "./textResources/appGeneralTextRes";
 import { userRoleValidationTextRes } from "./textResources/userRoleValidationTextRes";
 import { adminPanelTextRes } from "./textResources/adminPanelTextRes";
+import { roleUserFormsTextRes } from "./textResources/roleUserFormsTextRes";
 
 // some labels / names could be similar on several forms - thus I decided not
 // to combine all the file into one, but to call file name to get the names from
@@ -32,7 +33,10 @@ const getTextFile = (file: FormsNames): TextResources => {
       return userRoleValidationTextRes;
     
     case FormsNames.ADMIN_PANEL:
-      return adminPanelTextRes;   
+      return adminPanelTextRes;
+    
+    case FormsNames.USER_ROLE_FORMS:
+      return roleUserFormsTextRes;  
   }
 };
 

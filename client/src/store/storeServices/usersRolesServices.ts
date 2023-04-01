@@ -42,3 +42,8 @@ export const updateAllRoles = async () => {
     //TODO: process error handling and forwarding to the error page
   }
 };
+
+export const resolveRoleById = (roleId: string): RoleDocument | undefined => {
+  const usersRoles = store.getState().usersRoles.value;
+  return usersRoles.appRoles?.find((it) => it._id === roleId);
+}

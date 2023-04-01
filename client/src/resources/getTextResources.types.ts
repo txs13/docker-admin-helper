@@ -10,7 +10,8 @@ export enum FormsNames {
   "NAVBAR",
   "LOGIN_REGISTER",
   "USER_ROLE_VALIDATION",
-  "ADMIN_PANEL"
+  "ADMIN_PANEL",
+  "USER_ROLE_FORMS"
 }
 
 export interface PropPair {
