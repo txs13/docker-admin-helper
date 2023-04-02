@@ -1,14 +1,13 @@
-import { ReactElement } from "react";
 
 export interface ModalState {
   mainModalOpen: boolean;
   formToRender?: ModalForms;
-  formParams?: ModalFormParams;
+  formProps?: ModalFormProps;
   confirmationModalOpen: boolean;
   confirmationText?: string;
 }
 
-export interface ModalFormParams {
+export interface ModalFormProps {
   id: string;
   [key: string]: any;
 }
@@ -16,5 +15,5 @@ export interface ModalFormParams {
 export enum ModalForms {
   "ROLE_FORM",
   "USER_FORM",
-  "UNDEFINED"
+  "UNDEFINED",
 }

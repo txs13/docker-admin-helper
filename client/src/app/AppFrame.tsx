@@ -23,10 +23,7 @@ import {
   LocalizedTextResources,
 } from "../resources/getTextResources.types";
 import { getTextResources } from "../resources/getTextResources";
-import {
-  ModalFormParams,
-  ModalForms,
-} from "../store/features/modalState.types";
+import { ModalFormProps, ModalForms } from "../store/features/modalState.types";
 import RoleForm from "./components/UserRoleComponents/RoleForm";
 
 const AppFrame: React.FunctionComponent = () => {
@@ -66,7 +63,10 @@ const AppFrame: React.FunctionComponent = () => {
         </Container>
         <Dialog open={modalState.mainModalOpen}>
           {modalState.formToRender === ModalForms.ROLE_FORM ? (
-            <RoleForm formParams={modalState.formParams} />
+            <RoleForm
+              formProps={modalState.formProps}
+              showForm={modalState.mainModalOpen}
+            />
           ) : modalState.formToRender === ModalForms.USER_FORM ? (
             <LoadingFragment />
           ) : (

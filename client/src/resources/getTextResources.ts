@@ -13,7 +13,7 @@ import { navbarTextRes } from "./textResources/navbarTextRes";
 import { appGeneralTextRes } from "./textResources/appGeneralTextRes";
 import { userRoleValidationTextRes } from "./textResources/userRoleValidationTextRes";
 import { adminPanelTextRes } from "./textResources/adminPanelTextRes";
-import { roleUserFormsTextRes } from "./textResources/roleUserFormsTextRes";
+import { roleUserFormsTextRes } from "./textResources/userRoleFormsTextRes";
 
 // some labels / names could be similar on several forms - thus I decided not
 // to combine all the file into one, but to call file name to get the names from

@@ -3,15 +3,18 @@ import {
   resetModalState,
   updateModalState,
 } from "../features/modalState.slice";
-import { ModalFormParams, ModalForms } from "../features/modalState.types";
+import { ModalFormProps, ModalForms } from "../features/modalState.types";
 
-export const handleModalOpen = (formToRender: ModalForms, props?: ModalFormParams) => {
+export const handleModalOpen = (
+  formToRender: ModalForms,
+  formProps?: ModalFormProps
+) => {
   const modalState = store.getState().modalState.value;
   store.dispatch(
     updateModalState({
       ...modalState,
       formToRender: formToRender,
-      props: props,
+      formProps: formProps,
       mainModalOpen: true,
     })
   );
