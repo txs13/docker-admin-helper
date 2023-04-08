@@ -1,6 +1,6 @@
 import { Box, Paper, Tab } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import styles from "./AdminRoute.styles";
@@ -18,7 +18,14 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 const AdminRoute: React.FunctionComponent = () => {
   // the idea is to manage admin panel tabs navigation through the url path
   const location = useLocation();
+  const params = useParams();
   const navigate = useNavigate();
+
+  // resolve params and pathname for the tabs navigation purposes
+  const resolveParamsAndPath = (path: string, params: object): string => {
+
+    return path;
+  };
 
   // tabs handling code ---------------------------------------------------------
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -35,11 +42,13 @@ const AdminRoute: React.FunctionComponent = () => {
     if (JSON.stringify(updTextRes) !== JSON.stringify(textRes)) {
       setTextRes(updTextRes);
     }
-  }, [textRes, appLanguage]);
+    console.log("pathname", location.pathname);
+    console.log("param", params);
+  }, [textRes, appLanguage, location]);
 
   return (
     <Paper sx={styles.viewPort}>
-      <TabContext value={location.pathname}>
+      <TabContext value={resolveParamsAndPath(location.pathname, params)}>
         <Box sx={styles.tabsList}>
           <TabList
             orientation="vertical"

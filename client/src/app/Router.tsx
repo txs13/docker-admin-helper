@@ -59,7 +59,7 @@ const Router: React.FunctionComponent = () => {
         }
       />
       <Route
-        path="/adminpanel/roles"
+        path="/adminpanel/roles/:roleID?"
         element={
           <ProtectedRoute
             {...defaultAdminProtectedRouteProps}

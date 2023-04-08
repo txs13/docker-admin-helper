@@ -5,9 +5,9 @@
  */
 import crypto from "crypto";
 import fs from "fs";
-import path from 'path'
+import path from "path";
 
-import keysFolder from "../config/keyFolderConfig";
+import { keysFolder } from "../config/folderConfig";
 
 const genKeyPair = () => {
   const keyPair = crypto.generateKeyPairSync("rsa", {
@@ -21,12 +21,15 @@ const genKeyPair = () => {
       format: "pem", // Most common formatting choice
     },
   });
-  
+
   // Create the public key file
   fs.writeFileSync(path.join(keysFolder, "id_rsa_pub.pem"), keyPair.publicKey);
 
   // Create the private key file
-  fs.writeFileSync(path.join(keysFolder, "id_rsa_priv.pem"), keyPair.privateKey);
+  fs.writeFileSync(
+    path.join(keysFolder, "id_rsa_priv.pem"),
+    keyPair.privateKey
+  );
 };
 
-export default genKeyPair
+export default genKeyPair;

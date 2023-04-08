@@ -3,7 +3,7 @@ import path from "path";
 import jwt from "jsonwebtoken";
 import log from "./logger";
 import genKeyPair from "./generateKeys";
-import keysFolder from "../config/keyFolderConfig";
+import { keysFolder, globalRootFolder } from "../config/folderConfig";
 
 export const envDefaultContent =
   "DEV_HOST=0.0.0.0" +
@@ -36,7 +36,7 @@ export const envDefaultContent =
 
 const checkKeyPair = (): boolean => {
   // check .env file and create it in case there is no one
-  const envPath = path.join(__dirname, "..", "..", "..", ".env");
+  const envPath = path.join(globalRootFolder, ".env");
   try {
     const file = fs.readFileSync(envPath);
     if (file) {

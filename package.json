@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "(cd server && yarn dev) & (cd client && yarn start)",
-    "build": "(rm -r -d build || true) && (cd server && yarn build && mv build ../) && (cd client && yarn build && mv build ../build/public) && (cd build && (rm -r -d build || true) && cp -R ../server/node_modules ./node_modules)",
+    "build": "(rm -r -d build || true) && (cd server && yarn build && mv build ../) && (cd client && yarn build && mv build ../build/public) && (cp -R ./server/node_modules ./build/node_modules)",
     "dev:server": "(cd server && yarn dev)",
     "test:server": "cd server && yarn test",
     "test:client": "cd client && yarn test --watchAll=false",

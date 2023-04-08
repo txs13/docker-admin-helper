@@ -36,7 +36,7 @@ const checkDefaultEntities = async () => {
   if (adminRole) {
     log.info("Default admin role - OK");
   } else {
-    // create one if it is not inplace
+    // create one if it is not in place
     adminRole = await createRole(defaultAdminRole);
     log.info("Default admin role is created");
   }

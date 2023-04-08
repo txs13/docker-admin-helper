@@ -1,11 +1,8 @@
 import mongoose from "mongoose";
 import log from "./logger";
-import getEnvVars from "../config/config";
 import checkCreateDefaultEntities from "./checkCreateDefaultEntities";
 
-const dbConnect = async () => {
-  const { dbUri, dbName } = getEnvVars();
-
+const dbConnect = async (dbUri: string, dbName: string) => {
   try {
     mongoose.set("strictQuery", false);
     await mongoose.connect(dbUri, { dbName: dbName });
