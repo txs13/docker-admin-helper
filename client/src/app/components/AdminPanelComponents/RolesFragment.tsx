@@ -14,8 +14,17 @@ import styles from "./RolesFragment.styles";
 import RoleForm from "../UserRoleComponents/RoleForm";
 import { handleModalOpen } from "../../../store/storeServices/modalStateServices";
 import { ModalForms } from "../../../store/features/modalState.types";
+import { useNavigate } from "react-router-dom";
 
-const RolesFragment: React.FunctionComponent = () => {
+interface RolesFragmentPropsType {
+  roleID?: string;
+}
+
+const RolesFragment: React.FunctionComponent<RolesFragmentPropsType> = ({
+  roleID,
+}) => {
+  // navigate 
+  const navigate = useNavigate();
   // text resources handling code -----------------------------------------------
   const appLanguage = useSelector(
     (state: RootState) => state.appState.value.appLanguage
@@ -32,6 +41,13 @@ const RolesFragment: React.FunctionComponent = () => {
   const roles = useSelector(
     (state: RootState) => state.usersRoles.value.appRoles
   );
+
+  // open role details modal if we have one 
+  useEffect(() => {
+    if (roleID) {
+      handleModalOpen(ModalForms.ROLE_FORM, { id: roleID });
+    }
+  }, [roleID]);
 
   const columns: GridColDef[] = [
     {
@@ -80,7 +96,8 @@ const RolesFragment: React.FunctionComponent = () => {
   ];
 
   const handleRowClick: GridEventListener<"rowClick"> = (params) => {
-    handleModalOpen(ModalForms.ROLE_FORM, { id: params.row._id });
+    //handleModalOpen(ModalForms.ROLE_FORM, { id: params.row._id });
+    navigate(`/adminpanel/roles/${params.row._id}`);
   };
 
   return (
@@ -88,9 +105,9 @@ const RolesFragment: React.FunctionComponent = () => {
       <Typography>{textRes.rolesTabHeader}</Typography>
       <Toolbar></Toolbar>
       <DataGrid
-      sx={styles.grid}
-      slots={{}}
-      slotProps={{}}
+        sx={styles.grid}
+        slots={{}}
+        slotProps={{}}
         onRowClick={handleRowClick}
         getRowId={(row: RoleDocument) => row?._id}
         columns={columns}

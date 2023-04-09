@@ -1,6 +1,6 @@
 import { Box, Paper, Tab } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { Params, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import styles from "./AdminRoute.styles";
@@ -14,6 +14,7 @@ import {
 import { RootState } from "../../store/store";
 import { getTextResources } from "../../resources/getTextResources";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { resolveRoleById } from "../../store/storeServices/usersRolesServices";
 
 const AdminRoute: React.FunctionComponent = () => {
   // the idea is to manage admin panel tabs navigation through the url path
@@ -22,7 +23,21 @@ const AdminRoute: React.FunctionComponent = () => {
   const navigate = useNavigate();
 
   // resolve params and pathname for the tabs navigation purposes
-  const resolveParamsAndPath = (path: string, params: object): string => {
+  const resolveParamsAndPath = (
+    path: string,
+    params: Readonly<Params<string>>
+  ): string => {
+    if (params.roleID && resolveRoleById(params.roleID)) {
+      const regex = new RegExp(`/${params.roleID}$`);
+      const shortenedPath = path.replace(regex, "");
+      return shortenedPath;
+    } else {
+      // TODO: show error screen with wrong roleID
+    }
+
+    if (params.userID) {
+      // TODO: handle user details routing similar to role detail routing above
+    }
 
     return path;
   };
@@ -42,9 +57,20 @@ const AdminRoute: React.FunctionComponent = () => {
     if (JSON.stringify(updTextRes) !== JSON.stringify(textRes)) {
       setTextRes(updTextRes);
     }
-    console.log("pathname", location.pathname);
-    console.log("param", params);
   }, [textRes, appLanguage, location]);
+
+  // clearing the url id after modal is closed
+  const [modalWasOpened, setModalWasOpened] = useState(false);
+  const modalIsOpen = useSelector((state: RootState) => state.modalState.value.mainModalOpen);
+  useMemo(() => {
+    if(modalIsOpen && params.roleID) {
+      setModalWasOpened(true);
+    }
+    if (!modalIsOpen && params.roleID && modalWasOpened) {
+      setModalWasOpened(false);
+      navigate("/adminpanel/roles");
+    }
+  }, [modalIsOpen, modalWasOpened, navigate, params.roleID]);
 
   return (
     <Paper sx={styles.viewPort}>
@@ -67,7 +93,7 @@ const AdminRoute: React.FunctionComponent = () => {
           </TabPanel>
           <TabPanel value="/adminpanel/roles">
             <Box>
-              <RolesFragment />
+              <RolesFragment roleID={params.roleID}/>
             </Box>
           </TabPanel>
           <TabPanel value="/adminpanel/users">
