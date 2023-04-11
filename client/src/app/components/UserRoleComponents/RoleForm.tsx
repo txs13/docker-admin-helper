@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
+  useTheme,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 
@@ -30,6 +31,7 @@ interface RoleFormPropsType {
 interface FormState extends RoleDocument {
   roleError: string;
   descriptionError: string;
+  editingMode: boolean;
 }
 
 interface ValidationErrors {
@@ -46,6 +48,7 @@ const initialFormState: FormState = {
   roleError: "",
   descriptionError: "",
   __v: 0,
+  editingMode: false,
 };
 
 const RoleForm: React.FunctionComponent<RoleFormPropsType> = ({
@@ -70,35 +73,82 @@ const RoleForm: React.FunctionComponent<RoleFormPropsType> = ({
     }
   }, [textRes, appLanguage]);
 
-  // reset form state to the initial value on open
+  // reset form state to the initial value on open ------------------------------
   useEffect(() => {
-    if (showForm) {
-      if (formProps?.id) {
-        // getting user details and showing them
-        const currentRole = resolveRoleById(formProps.id);
-        if (currentRole) {
-          const newFormState: FormState = {
-            ...currentRole,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            roleError: "",
-            descriptionError: "",
-          };
-          if (!newFormState.description) newFormState.description = "";
-          setFormState(newFormState);
-        } else {
-          // TODO: generate wrong role id error message
-        }
-      } else {
-        // setting initial form value for new user
-        setFormState(initialFormState);
-      }
+    if (showForm && formProps?.id) {
+      takeRoleDataFromStore();
+    } else {
+      // setting initial form value for new user
+      setFormState(initialFormState);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formProps, showForm]);
 
-  // button click handlers
-  const handleFormCloseClick = () => {
-    handleModalClose();
+  const takeRoleDataFromStore = () => {
+    if (formProps?.id) {
+      // getting user details and showing them
+      const currentRole = resolveRoleById(formProps.id);
+      if (currentRole) {
+        const newFormState: FormState = {
+          ...currentRole,
+          roleError: "",
+          descriptionError: "",
+          editingMode: false,
+        };
+        if (!newFormState.description) newFormState.description = "";
+        setFormState(newFormState);
+      } else {
+        // TODO: generate wrong role id error message
+      }
+    }
+  };
+
+  // input change handler --------------------------------------------------------
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    switch (e.target.name) {
+      case "role":
+        setFormState({ ...formState, role: e.target.value, roleError: "" });
+        break;
+      case "description":
+        setFormState({
+          ...formState,
+          description: e.target.value,
+          descriptionError: "",
+        });
+        break;
+    }
+  };
+
+  // button click handlers ------------------------------------------------------
+  const formButtonClickHandler = (
+    clickSource:
+      | "copyUrl"
+      | "save"
+      | "cancel"
+      | "change"
+      | "add"
+      | "delete"
+      | "close"
+  ) => {
+    switch (clickSource) {
+      case "copyUrl":
+        break;
+      case "save":
+        break;
+      case "cancel":
+        takeRoleDataFromStore();
+        break;
+      case "change":
+        setFormState({ ...formState, editingMode: true });
+        break;
+      case "add":
+        break;
+      case "delete":
+        break;
+      case "close":
+        handleModalClose();
+        break;
+    }
   };
 
   return (
@@ -112,19 +162,24 @@ const RoleForm: React.FunctionComponent<RoleFormPropsType> = ({
           value={formState._id}
           fullWidth
           disabled
-          sx={styles.inputField}
+          sx={{ ...styles.inputField, display: formProps?.id ? "" : "none" }}
         />
         <TextField
           label={textRes.roleNameInputLabel}
           value={formState.role}
           fullWidth
+          disabled={!formState.editingMode}
+          name="role"
+          onChange={handleInputChange}
           sx={styles.inputField}
         />
         <TextField
           label={textRes.roleDescInputLabel}
           value={formState.description}
           fullWidth
-          disabled
+          disabled={!formState.editingMode}
+          name="description"
+          onChange={handleInputChange}
           sx={styles.inputField}
         />
         <TextField
@@ -132,26 +187,99 @@ const RoleForm: React.FunctionComponent<RoleFormPropsType> = ({
           value={formState.createdAt}
           fullWidth
           disabled
-          sx={styles.inputField}
+          sx={{ ...styles.inputField, display: formProps?.id ? "" : "none" }}
         />
         <TextField
           label={textRes.roleUpdatedInputLabel}
           value={formState.updatedAt}
           fullWidth
           disabled
-          sx={styles.inputField}
+          sx={{ ...styles.inputField, display: formProps?.id ? "" : "none" }}
         />
         <TextField
           label={textRes.roleVersInputLabel}
           value={formState.__v}
           fullWidth
           disabled
-          sx={styles.inputField}
+          sx={{ ...styles.inputField, display: formProps?.id ? "" : "none" }}
         />
       </DialogContent>
       <DialogActions>
-        <ButtonGroup fullWidth>
-          <Button onClick={handleFormCloseClick}>Close</Button>
+        <ButtonGroup sx={styles.buttonGroup} fullWidth>
+          <Button
+            sx={{
+              ...styles.button,
+              display: !formState.editingMode && formProps?.id ? "" : "none",
+            }}
+            variant="outlined"
+            color="info"
+            onClick={() => formButtonClickHandler("copyUrl")}
+          >
+            {textRes.copyUrlBtnLabel}
+          </Button>
+          <Button
+            sx={{
+              ...styles.button,
+              display: formState.editingMode && formProps?.id ? "" : "none",
+            }}
+            variant="contained"
+            color="error"
+            onClick={() => formButtonClickHandler("delete")}
+          >
+            {textRes.deleteBtnLabel}
+          </Button>
+          <Button
+            sx={{
+              ...styles.button,
+              display: formState.editingMode && formProps?.id ? "" : "none",
+            }}
+            variant="contained"
+            color="success"
+            onClick={() => formButtonClickHandler("save")}
+          >
+            {textRes.saveBtnLabel}
+          </Button>
+          <Button
+            sx={{
+              ...styles.button,
+              display: formState.editingMode && formProps?.id ? "" : "none",
+            }}
+            variant="contained"
+            color="info"
+            onClick={() => formButtonClickHandler("cancel")}
+          >
+            {textRes.cancelBtnLabel}
+          </Button>
+          <Button
+            sx={{
+              ...styles.button,
+              display: !formState.editingMode && formProps?.id ? "" : "none",
+            }}
+            variant="contained"
+            color="info"
+            onClick={() => formButtonClickHandler("change")}
+          >
+            {textRes.changeBtnLabel}
+          </Button>
+          <Button
+            sx={{
+              ...styles.button,
+              display: !formProps?.id ? "" : "none",
+            }}
+            variant="contained"
+            color="success"
+            onClick={() => formButtonClickHandler("add")}
+          >
+            {textRes.addBtnLabel}
+          </Button>
+          <Button
+            sx={styles.button}
+            variant="outlined"
+            color="info"
+            onClick={() => formButtonClickHandler("close")}
+          >
+            {textRes.closeBtnLabel}
+          </Button>
         </ButtonGroup>
       </DialogActions>
     </Box>

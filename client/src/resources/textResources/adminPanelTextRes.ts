@@ -23,12 +23,30 @@ export const adminPanelTextRes: TextResources = {
     EN: "role description",
   },
   createdAtTableColumnHeader: {
-    EN: "created at"
+    EN: "created at",
   },
   updatedAtTableColumnHeader: {
-    EN: "updated at"
+    EN: "updated at",
   },
   versionTableColumnHeader: {
-    EN: "version"
+    EN: "version",
+  },
+  roleNameFilterMenuItem: {
+    EN: "by role name",
+  },
+  roleDescFilterMenuItem: {
+    EN: "by role description",
+  },
+  searchFieldLabel: {
+    EN: "search by",
+  },
+  searchWhatLabel: {
+    EN: "search what",
+  },
+  onlyPublicSwitchLabel: {
+    EN: "only public",
+  },
+  addRoleBtnLabel: {
+    EN: "new role",
   },
 };
