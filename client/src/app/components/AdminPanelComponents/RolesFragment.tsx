@@ -23,8 +23,7 @@ import {
 import { RoleDocument } from "../../../store/features/appState.types";
 import { RootState } from "../../../store/store";
 import styles from "./RolesFragment.styles";
-import RoleForm from "../UserRoleComponents/RoleForm";
-import { handleModalOpen } from "../../../store/storeServices/modalStateServices";
+import { handleModalClose, handleModalOpen } from "../../../store/storeServices/modalStateServices";
 import { ModalForms } from "../../../store/features/modalState.types";
 import { useNavigate } from "react-router-dom";
 
@@ -78,6 +77,8 @@ const RolesFragment: React.FunctionComponent<RolesFragmentPropsType> = ({
   useEffect(() => {
     if (roleID) {
       handleModalOpen(ModalForms.ROLE_FORM, { id: roleID });
+    } else {
+      handleModalClose();
     }
   }, [roleID]);
 

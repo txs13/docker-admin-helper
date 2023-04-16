@@ -47,6 +47,9 @@ export const roleUserFormsTextRes: TextResources = {
     EN: "delete",
   },
   cancelBtnLabel: {
-    EN: "cancel"
+    EN: "cancel",
+  },
+  confirmDeleteRoleText: {
+    EN: "You are going to delete the role "
   },
 };

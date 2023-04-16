@@ -3,7 +3,7 @@ import {
   resetModalState,
   updateModalState,
 } from "../features/modalState.slice";
-import { ModalFormProps, ModalForms } from "../features/modalState.types";
+import { ConfirmationModalActions, ModalFormProps, ModalForms } from "../features/modalState.types";
 
 export const handleModalOpen = (
   formToRender: ModalForms,
@@ -30,6 +30,30 @@ export const handleModalClose = () => {
   );
 };
 
-export const handleConfirmationOpen = () => {};
+export const handleConfirmationOpen = (
+  confirmationText: string,
+  confirmationAction: ConfirmationModalActions
+) => {
+  const modalState = store.getState().modalState.value;
+  store.dispatch(
+    updateModalState({
+      ...modalState,
+      confirmationModalOpen: true,
+      confirmationText: confirmationText,
+      confirmationAction: confirmationAction
+    })
+  );
+};
 
-export const handleConfirmationClosed = () => {};
+
+export const handleConfirmationClose = () => {
+  const modalState = store.getState().modalState.value;
+  store.dispatch(
+    updateModalState({
+      ...modalState,
+      confirmationModalOpen: false,
+      confirmationText: undefined,
+      confirmationAction: undefined,
+    })
+  );
+};

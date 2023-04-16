@@ -19,9 +19,17 @@ import {
   LocalizedTextResources,
 } from "../../../resources/getTextResources.types";
 import { getTextResources } from "../../../resources/getTextResources";
-import { handleModalClose } from "../../../store/storeServices/modalStateServices";
-import { ModalFormProps } from "../../../store/features/modalState.types";
+import {
+  handleConfirmationClose,
+  handleConfirmationOpen,
+  handleModalClose,
+} from "../../../store/storeServices/modalStateServices";
+import {
+  ConfirmationModalActions,
+  ModalFormProps,
+} from "../../../store/features/modalState.types";
 import { resolveRoleById } from "../../../store/storeServices/usersRolesServices";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 interface RoleFormPropsType {
   formProps?: ModalFormProps;
@@ -55,6 +63,10 @@ const RoleForm: React.FunctionComponent<RoleFormPropsType> = ({
   formProps,
   showForm,
 }) => {
+  const location = useLocation();
+  const params = useParams();
+  const navigate = useNavigate();
+
   // form state variable --------------------------------------------------------
   const [formState, setFormState] = useState<FormState>(initialFormState);
 
@@ -81,7 +93,7 @@ const RoleForm: React.FunctionComponent<RoleFormPropsType> = ({
       // setting initial form value for new user
       setFormState(initialFormState);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formProps, showForm]);
 
   const takeRoleDataFromStore = () => {
@@ -120,6 +132,7 @@ const RoleForm: React.FunctionComponent<RoleFormPropsType> = ({
   };
 
   // button click handlers ------------------------------------------------------
+  const modalState = useSelector((state: RootState) => state.modalState.value);
   const formButtonClickHandler = (
     clickSource:
       | "copyUrl"
@@ -144,9 +157,20 @@ const RoleForm: React.FunctionComponent<RoleFormPropsType> = ({
       case "add":
         break;
       case "delete":
+        if (formProps?.id && resolveRoleById(formProps?.id)?.role)
+          handleConfirmationOpen(
+            textRes.confirmDeleteRoleText +
+              '"' +
+              resolveRoleById(formProps?.id)?.role +
+              '"',
+            ConfirmationModalActions.DELETE_ROLE
+          );
         break;
       case "close":
-        handleModalClose();
+        if (formProps?.id) {
+          const regex = new RegExp(`/${formProps?.id}$`);
+          navigate(location.pathname.replace(regex, ""));
+        } else handleModalClose();
         break;
     }
   };

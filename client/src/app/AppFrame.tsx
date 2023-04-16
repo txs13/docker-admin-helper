@@ -4,10 +4,10 @@ import {
   Container,
   Dialog,
   DialogActions,
+  DialogContent,
   DialogContentText,
   DialogTitle,
   useTheme,
-  CircularProgress,
 } from "@mui/material";
 import React, { ReactElement, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -23,8 +23,9 @@ import {
   LocalizedTextResources,
 } from "../resources/getTextResources.types";
 import { getTextResources } from "../resources/getTextResources";
-import { ModalFormProps, ModalForms } from "../store/features/modalState.types";
+import { ConfirmationModalActions, ModalForms } from "../store/features/modalState.types";
 import RoleForm from "./components/UserRoleComponents/RoleForm";
+import { handleConfirmationClose } from "../store/storeServices/modalStateServices";
 
 const AppFrame: React.FunctionComponent = () => {
   const theme = useTheme();
@@ -47,6 +48,24 @@ const AppFrame: React.FunctionComponent = () => {
 
   const appState = useSelector((state: RootState) => state.appState.value);
   const modalState = useSelector((state: RootState) => state.modalState.value);
+
+  // click handlers
+  const handleConfirmClickBtn = () => {
+    if (modalState.confirmationAction) {
+      switch(modalState.confirmationAction) {
+        case ConfirmationModalActions.DELETE_ROLE:
+          console.log("The role is almost deleted");
+          handleConfirmationClose();
+          break;
+        default:
+          console.error("Wrong passed function property");  
+      }
+    }
+  };
+
+  const handleCancelClickBtn = () => {
+    handleConfirmationClose();
+  };
 
   return (
     <Box sx={styles.viewportFrame}>
@@ -74,13 +93,19 @@ const AppFrame: React.FunctionComponent = () => {
           )}
         </Dialog>
         <Dialog open={modalState.confirmationModalOpen}>
-          <DialogTitle></DialogTitle>
-          <DialogContentText>
-            {modalState.confirmationText || " "}
-          </DialogContentText>
+          <DialogTitle>{textRes.confirmActionHeader}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              {modalState.confirmationText || " "}
+            </DialogContentText>
+          </DialogContent>
           <DialogActions>
-            <Button></Button>
-            <Button></Button>
+            <Button onClick={handleConfirmClickBtn}>
+              {textRes.confirmBtnLabel}
+            </Button>
+            <Button onClick={handleCancelClickBtn}>
+              {textRes.cancelBtnLabel}
+            </Button>
           </DialogActions>
         </Dialog>
       </Box>
