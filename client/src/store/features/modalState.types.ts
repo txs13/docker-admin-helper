@@ -4,7 +4,7 @@ export interface ModalState {
   formProps?: ModalFormProps;
   confirmationModalOpen: boolean;
   confirmationText?: string;
-  confirmationAction?: ConfirmationModalActions;
+  actionIsConfirmed?: boolean;
 }
 
 export interface ModalFormProps {
@@ -16,12 +16,4 @@ export enum ModalForms {
   "ROLE_FORM",
   "USER_FORM",
   "UNDEFINED",
-}
-
-export enum ConfirmationModalActions {
-  "DELETE_USER",
-  "UPDATE_USER",
-  "DELETE_ROLE",
-  "UPDATE_ROLE",
-  "UNDEFINED"
 }

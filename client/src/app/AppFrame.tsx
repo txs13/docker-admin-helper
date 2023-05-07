@@ -9,7 +9,7 @@ import {
   DialogTitle,
   useTheme,
 } from "@mui/material";
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { RootState } from "../store/store";
@@ -23,9 +23,9 @@ import {
   LocalizedTextResources,
 } from "../resources/getTextResources.types";
 import { getTextResources } from "../resources/getTextResources";
-import { ConfirmationModalActions, ModalForms } from "../store/features/modalState.types";
+import { ModalForms } from "../store/features/modalState.types";
 import RoleForm from "./components/UserRoleComponents/RoleForm";
-import { handleConfirmationClose } from "../store/storeServices/modalStateServices";
+import { handleConfirmationAccepted, handleConfirmationClose } from "../store/storeServices/modalStateServices";
 
 const AppFrame: React.FunctionComponent = () => {
   const theme = useTheme();
@@ -51,16 +51,7 @@ const AppFrame: React.FunctionComponent = () => {
 
   // click handlers
   const handleConfirmClickBtn = () => {
-    if (modalState.confirmationAction) {
-      switch(modalState.confirmationAction) {
-        case ConfirmationModalActions.DELETE_ROLE:
-          console.log("The role is almost deleted");
-          handleConfirmationClose();
-          break;
-        default:
-          console.error("Wrong passed function property");  
-      }
-    }
+    handleConfirmationAccepted();
   };
 
   const handleCancelClickBtn = () => {
@@ -80,33 +71,43 @@ const AppFrame: React.FunctionComponent = () => {
             <Router />
           )}
         </Container>
-        <Dialog open={modalState.mainModalOpen}>
-          {modalState.formToRender === ModalForms.ROLE_FORM ? (
-            <RoleForm
-              formProps={modalState.formProps}
-              showForm={modalState.mainModalOpen}
-            />
-          ) : modalState.formToRender === ModalForms.USER_FORM ? (
-            <LoadingFragment />
-          ) : (
-            <LoadingFragment />
-          )}
-        </Dialog>
-        <Dialog open={modalState.confirmationModalOpen}>
-          <DialogTitle>{textRes.confirmActionHeader}</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              {modalState.confirmationText || " "}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleConfirmClickBtn}>
-              {textRes.confirmBtnLabel}
-            </Button>
-            <Button onClick={handleCancelClickBtn}>
-              {textRes.cancelBtnLabel}
-            </Button>
-          </DialogActions>
+        <Dialog
+          open={modalState.mainModalOpen}
+          aria-labelledby="main-modal"
+          aria-describedby="main-modal"
+        >
+          <Box>
+            {modalState.formToRender === ModalForms.ROLE_FORM ? (
+              <RoleForm
+                formProps={modalState.formProps}
+                showForm={modalState.mainModalOpen}
+              />
+            ) : modalState.formToRender === ModalForms.USER_FORM ? (
+              <LoadingFragment />
+            ) : (
+              <LoadingFragment />
+            )}
+            <Dialog
+              open={modalState.confirmationModalOpen}
+              aria-labelledby="confirmation-modal"
+              aria-describedby="confirmation-modal"
+            >
+              <DialogTitle>{textRes.confirmActionHeader}</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  {modalState.confirmationText || " "}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleConfirmClickBtn}>
+                  {textRes.confirmBtnLabel}
+                </Button>
+                <Button onClick={handleCancelClickBtn}>
+                  {textRes.cancelBtnLabel}
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Box>
         </Dialog>
       </Box>
     </Box>

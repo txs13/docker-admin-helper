@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -7,12 +7,14 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  useTheme,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 
 import styles from "./RoleForm.styles";
-import { RoleDocument } from "../../../store/features/appState.types";
+import {
+  RoleDocument,
+  RoleInput,
+} from "../../../store/features/appState.types";
 import { RootState } from "../../../store/store";
 import {
   FormsNames,
@@ -24,12 +26,15 @@ import {
   handleConfirmationOpen,
   handleModalClose,
 } from "../../../store/storeServices/modalStateServices";
+import { ModalFormProps } from "../../../store/features/modalState.types";
 import {
-  ConfirmationModalActions,
-  ModalFormProps,
-} from "../../../store/features/modalState.types";
-import { resolveRoleById } from "../../../store/storeServices/usersRolesServices";
+  createRoleService,
+  deleteRoleService,
+  resolveRoleById,
+} from "../../../store/storeServices/usersRolesServices";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { validateResourcesAsync } from "../../../validation/validateResources";
+import { roleSchema } from "../../../validation/userAndRoleValidation.scheme";
 
 interface RoleFormPropsType {
   formProps?: ModalFormProps;
@@ -42,7 +47,7 @@ interface FormState extends RoleDocument {
   editingMode: boolean;
 }
 
-interface ValidationErrors {
+interface FormValidationErrors {
   roleError?: string;
   descriptionError?: string;
 }
@@ -56,7 +61,7 @@ const initialFormState: FormState = {
   roleError: "",
   descriptionError: "",
   __v: 0,
-  editingMode: false,
+  editingMode: true,
 };
 
 const RoleForm: React.FunctionComponent<RoleFormPropsType> = ({
@@ -133,7 +138,7 @@ const RoleForm: React.FunctionComponent<RoleFormPropsType> = ({
 
   // button click handlers ------------------------------------------------------
   const modalState = useSelector((state: RootState) => state.modalState.value);
-  const formButtonClickHandler = (
+  const formButtonClickHandler = async (
     clickSource:
       | "copyUrl"
       | "save"
@@ -155,6 +160,7 @@ const RoleForm: React.FunctionComponent<RoleFormPropsType> = ({
         setFormState({ ...formState, editingMode: true });
         break;
       case "add":
+        await attemptCreateRole();
         break;
       case "delete":
         if (formProps?.id && resolveRoleById(formProps?.id)?.role)
@@ -162,18 +168,69 @@ const RoleForm: React.FunctionComponent<RoleFormPropsType> = ({
             textRes.confirmDeleteRoleText +
               '"' +
               resolveRoleById(formProps?.id)?.role +
-              '"',
-            ConfirmationModalActions.DELETE_ROLE
+              '"'
           );
         break;
       case "close":
-        if (formProps?.id) {
-          const regex = new RegExp(`/${formProps?.id}$`);
-          navigate(location.pathname.replace(regex, ""));
-        } else handleModalClose();
+        resolveParentUrlAndCloseModal();
         break;
     }
   };
+
+  // helper functions
+  const resolveParentUrlAndCloseModal = () => {
+    if (formProps?.id) {
+      const regex = new RegExp(`/${formProps?.id}$`);
+      navigate(location.pathname.replace(regex, ""));
+    } else handleModalClose();
+  };
+
+  const attemptCreateRole = async () => {
+    const roleInput: RoleInput = {
+      role: formState.role,
+    };
+    if (formState.description !== "")
+      roleInput.description = formState.description;
+
+    const errors: any[] = await validateResourcesAsync(roleSchema, roleInput);
+
+    if (!errors) {
+      //if no errors proceed with trying to send create role api request
+      const result = await createRoleService(roleInput);
+
+      if (!result.error)
+        resolveParentUrlAndCloseModal();    
+      else {
+        // TODO: show error mentioned in the api response
+      }
+    } else {
+      // if there are errors - show them in the input fields
+      const errorMessages: FormValidationErrors = {
+        roleError: "",
+        descriptionError: "",
+      };
+      console.log(errors);
+      errors.forEach((error) => {
+        if (error.path[0] === "role") {
+          if (!errorMessages.roleError) errorMessages.roleError = error.message;
+        }
+        if (error.path[0] === "description") {
+          if (!errorMessages.descriptionError) errorMessages.descriptionError = error.message;
+        }
+      });
+      setFormState({ ...formState, ...errorMessages });
+    }
+  };
+
+  // confirmation modal action handler
+  useEffect(() => {
+    if (modalState.actionIsConfirmed) {
+      handleConfirmationClose();
+      resolveParentUrlAndCloseModal();
+      if (formProps?.id) deleteRoleService(formProps.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [modalState.actionIsConfirmed]);
 
   return (
     <Box sx={styles.viewPort}>
@@ -194,6 +251,10 @@ const RoleForm: React.FunctionComponent<RoleFormPropsType> = ({
           fullWidth
           disabled={!formState.editingMode}
           name="role"
+          type="text"
+          helperText={formState.roleError}
+          FormHelperTextProps={{ error: true }}
+          error={formState.roleError === "" ? false : true}
           onChange={handleInputChange}
           sx={styles.inputField}
         />
@@ -203,6 +264,10 @@ const RoleForm: React.FunctionComponent<RoleFormPropsType> = ({
           fullWidth
           disabled={!formState.editingMode}
           name="description"
+          type="text"
+          helperText={formState.descriptionError}
+          FormHelperTextProps={{ error: true }}
+          error={formState.descriptionError === "" ? false : true}
           onChange={handleInputChange}
           sx={styles.inputField}
         />

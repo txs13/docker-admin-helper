@@ -154,10 +154,10 @@ const LoginForm: React.FunctionComponent = () => {
         passwordError: "",
       };
       errors.forEach((error) => {
-        if (error.path["0"] === "email") {
+        if (error.path[0] === "email") {
           errorMessages.emailError = error.message;
         }
-        if (error.path["0"] === "password") {
+        if (error.path[0] === "password") {
           errorMessages.passwordError = error.message;
         }
       });

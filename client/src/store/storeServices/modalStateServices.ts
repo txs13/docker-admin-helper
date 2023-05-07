@@ -3,7 +3,7 @@ import {
   resetModalState,
   updateModalState,
 } from "../features/modalState.slice";
-import { ConfirmationModalActions, ModalFormProps, ModalForms } from "../features/modalState.types";
+import { ModalFormProps, ModalForms } from "../features/modalState.types";
 
 export const handleModalOpen = (
   formToRender: ModalForms,
@@ -31,20 +31,28 @@ export const handleModalClose = () => {
 };
 
 export const handleConfirmationOpen = (
-  confirmationText: string,
-  confirmationAction: ConfirmationModalActions
+  confirmationText: string
 ) => {
   const modalState = store.getState().modalState.value;
   store.dispatch(
     updateModalState({
       ...modalState,
       confirmationModalOpen: true,
-      confirmationText: confirmationText,
-      confirmationAction: confirmationAction
+      confirmationText: confirmationText
     })
   );
 };
 
+export const handleConfirmationAccepted = () => {
+  const modalState = store.getState().modalState.value;
+  if (modalState.confirmationModalOpen)
+    store.dispatch(
+      updateModalState({
+        ...modalState,
+        actionIsConfirmed: true,
+      })
+    );
+}
 
 export const handleConfirmationClose = () => {
   const modalState = store.getState().modalState.value;
@@ -53,7 +61,7 @@ export const handleConfirmationClose = () => {
       ...modalState,
       confirmationModalOpen: false,
       confirmationText: undefined,
-      confirmationAction: undefined,
+      actionIsConfirmed: undefined
     })
   );
 };
