@@ -1,10 +1,18 @@
 FROM node:lts
 
-RUN apt-get update \
-    && apt-get install -y wget gnupg \
-    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-    && apt-get update \
-    && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
-      --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+RUN ["apt-get", "update"]
+RUN ["apt-get", "-y", "install", "nano"]
+
+RUN wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
+RUN chmod +x /usr/local/bin/oh-my-posh
+
+RUN mkdir ~/.poshthemes
+RUN wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip -O ~/.poshthemes/themes.zip
+RUN unzip ~/.poshthemes/themes.zip -d ~/.poshthemes
+RUN chmod u+rw ~/.poshthemes/*.json
+RUN rm ~/.poshthemes/themes.zip
+
+# if you would like to use oh-my-posh (https://ohmyposh.dev/) inside the dev container, you have to:
+# 1. ensure that your terminal has one the supported fonts installed
+# 2. run this command after the container is built: echo 'eval "$(oh-my-posh --init --shell bash --config ~/.poshthemes/powerlevel10k_rainbow.omp.json)"' >> ~/.bashrc
+# 3. restart the terminal

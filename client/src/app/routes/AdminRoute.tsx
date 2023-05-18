@@ -59,19 +59,6 @@ const AdminRoute: React.FunctionComponent = () => {
     }
   }, [textRes, appLanguage, location]);
 
-  // clearing the url id after modal is closed
-  // const [modalWasOpened, setModalWasOpened] = useState(false);
-  // const modalIsOpen = useSelector((state: RootState) => state.modalState.value.mainModalOpen);
-  // useMemo(() => {
-  //   if(modalIsOpen && params.roleID) {
-  //     setModalWasOpened(true);
-  //   }
-  //   if (!modalIsOpen && params.roleID && modalWasOpened) {
-  //     setModalWasOpened(false);
-  //     navigate("/adminpanel/roles");
-  //   }
-  // }, [modalIsOpen, modalWasOpened, navigate, params.roleID]);
-
   return (
     <Paper sx={styles.viewPort}>
       <TabContext value={resolveParamsAndPath(location.pathname, params)}>
