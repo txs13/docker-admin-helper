@@ -13,6 +13,9 @@ export const adminPanelTextRes: TextResources = {
   rolesTabHeader: {
     EN: "App roles list",
   },
+  usersTabHeader: {
+    EN: "App users list",
+  },
   idTableColumnHeader: {
     EN: "role ID",
   },
@@ -31,11 +34,38 @@ export const adminPanelTextRes: TextResources = {
   versionTableColumnHeader: {
     EN: "version",
   },
+  emailTableColumnHeader: {
+    EN: "email",
+  },
+  nameTableColumnHeader: {
+    EN: "name",
+  },
+  familynameTableColumnHeader: {
+    EN: "familyname",
+  },
+  companyTableColumnHeader: {
+    EN: "company",
+  },
+  isConfirmedTableColumnHeader: {
+    EN: "is confirmed",
+  },
   roleNameFilterMenuItem: {
     EN: "by role name",
   },
-  roleDescFilterMenuItem: {
-    EN: "by role description",
+  descFilterMenuItem: {
+    EN: "by description",
+  },
+  emailFilterMenuItem: {
+    EN: "by email",
+  },
+  nameFilterMenuItem: {
+    EN: "by name",
+  },
+  familynameFilterMenuItem: {
+    EN: "by familyname",
+  },
+  companyFilterMenuItem: {
+    EN: "by company",
   },
   searchFieldLabel: {
     EN: "search by",
@@ -46,7 +76,13 @@ export const adminPanelTextRes: TextResources = {
   onlyPublicSwitchLabel: {
     EN: "only public",
   },
+  onlyUnconfirmedSwitchLabel: {
+    EN: "only unconfirmed",
+  },
   addRoleBtnLabel: {
     EN: "new role",
+  },
+  addUserBtnLabel: {
+    EN: "new user"
   },
 };

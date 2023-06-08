@@ -62,32 +62,25 @@ const AdminRoute: React.FunctionComponent = () => {
   return (
     <Paper sx={styles.viewPort}>
       <TabContext value={resolveParamsAndPath(location.pathname, params)}>
-        <Box sx={styles.tabsList}>
-          <TabList
-            orientation="vertical"
-            onChange={handleTabChange}
-          >
-            <Tab label={textRes.startingTabItem} value="/adminpanel" />
-            <Tab label={textRes.usersTabItem} value="/adminpanel/users" />
-            <Tab label={textRes.rolesTabItem} value="/adminpanel/roles" />
-          </TabList>
-        </Box>
-        <Box sx={styles.fragmentPort}>
-          <TabPanel value="/adminpanel">
-            <Box>
+        <Box sx={styles.flexBox}>
+          <Box sx={styles.tabsList}>
+            <TabList orientation="vertical" onChange={handleTabChange}>
+              <Tab label={textRes.startingTabItem} value="/adminpanel" />
+              <Tab label={textRes.usersTabItem} value="/adminpanel/users" />
+              <Tab label={textRes.rolesTabItem} value="/adminpanel/roles" />
+            </TabList>
+          </Box>
+          <Box sx={styles.fragmentPort}>
+            <TabPanel value="/adminpanel">
               <StartingFragment />
-            </Box>
-          </TabPanel>
-          <TabPanel value="/adminpanel/roles">
-            <Box>
-              <RolesFragment roleID={params.roleID}/>
-            </Box>
-          </TabPanel>
-          <TabPanel value="/adminpanel/users">
-            <Box>
+            </TabPanel>
+            <TabPanel value="/adminpanel/roles">
+              <RolesFragment roleID={params.roleID} />
+            </TabPanel>
+            <TabPanel value="/adminpanel/users">
               <UsersFragment />
-            </Box>
-          </TabPanel>
+            </TabPanel>
+          </Box>
         </Box>
       </TabContext>
     </Paper>

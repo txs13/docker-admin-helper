@@ -39,7 +39,7 @@ interface FilterMenuItem {
   value: MenuValue;
 }
 
-interface UserFilters {
+interface RoleFilters {
   field: MenuValue;
   filterValue: string;
   showPublic: boolean;
@@ -133,11 +133,11 @@ const RolesFragment: React.FunctionComponent<RolesFragmentPropsType> = ({
     { id: "1", label: textRes.roleNameFilterMenuItem, value: "role" },
     {
       id: "2",
-      label: textRes.roleDescFilterMenuItem,
+      label: textRes.descFilterMenuItem,
       value: "description",
     },
   ];
-  const [filters, setFilters] = useState<UserFilters>({
+  const [filters, setFilters] = useState<RoleFilters>({
     field: "role",
     filterValue: "",
     showPublic: false,
@@ -244,7 +244,7 @@ const RolesFragment: React.FunctionComponent<RolesFragmentPropsType> = ({
           label={textRes.onlyPublicSwitchLabel}
         />
         <IconButton
-          aria-label="delete"
+          aria-label="add"
           size="large"
           onClick={addRoleClickHandler}
         >
