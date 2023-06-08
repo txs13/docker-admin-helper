@@ -68,7 +68,7 @@ const Router: React.FunctionComponent = () => {
         }
       />
       <Route
-        path="/adminpanel/users"
+        path="/adminpanel/users/:userID?"
         element={
           <ProtectedRoute
             {...defaultAdminProtectedRouteProps}

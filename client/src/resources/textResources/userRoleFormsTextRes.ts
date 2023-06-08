@@ -7,6 +7,12 @@ export const roleUserFormsTextRes: TextResources = {
   newRoleFormHeader: {
     EN: "New role",
   },
+  userFormHeader: {
+    EN: "User details",
+  },
+  newUserFormHeader: {
+    EN: "New user",
+  },
   roleIDInputLabel: {
     EN: "role ID",
   },
@@ -16,17 +22,56 @@ export const roleUserFormsTextRes: TextResources = {
   roleDescInputLabel: {
     EN: "role description",
   },
-  roleCreatedInputLabel: {
+  createdInputLabel: {
     EN: "created at",
   },
-  roleUpdatedInputLabel: {
+  updatedInputLabel: {
     EN: "updated at",
   },
-  roleVersInputLabel: {
-    EN: "role version",
+  versInputLabel: {
+    EN: "data model version",
   },
-  userFormHeader: {
-    EN: "User details",
+  userIDInputLabel: {
+    EN: "user ID",
+  },
+  userNameInputLabel: {
+    EN: "name",
+  },
+  userFamilynameInputLabel: {
+    EN: "familyname",
+  },
+  userEmailInputLabel: {
+    EN: "email"
+  },
+  userPhoneInputLabel: {
+    EN: "phone number"
+  },
+  userAddressInputLabel: {
+    EN: "Address / Location"
+  },
+  userCompanyInputLabel: {
+    EN: "Company"
+  },
+  userPositionInputLabel: {
+    EN: "Position"
+  },
+  userDescriptionInputLabel: {
+    EN: "Description"
+  },
+  userRoleInputLabel: {
+    EN: "Webapp Role"
+  },
+  userIsConfirmedInputLabel: {
+    EN: "is confirmed"
+  },
+  userIsConfirmedMenuItem: {
+    EN: "confirmed"
+  },
+  userIsNotConfirmedMenuItem: {
+    EN: "NOT confirmed"
+  },
+  userPasswordInputLabel: {
+    EN: "password"
   },
   closeBtnLabel: {
     EN: "close",
@@ -50,6 +95,6 @@ export const roleUserFormsTextRes: TextResources = {
     EN: "cancel",
   },
   confirmDeleteRoleText: {
-    EN: "You are going to delete the role "
+    EN: "You are going to delete the role ",
   },
 };

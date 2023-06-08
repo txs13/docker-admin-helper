@@ -272,21 +272,21 @@ const RoleForm: React.FunctionComponent<RoleFormPropsType> = ({
           sx={styles.inputField}
         />
         <TextField
-          label={textRes.roleCreatedInputLabel}
+          label={textRes.createdInputLabel}
           value={formState.createdAt}
           fullWidth
           disabled
           sx={{ ...styles.inputField, display: formProps?.id ? "" : "none" }}
         />
         <TextField
-          label={textRes.roleUpdatedInputLabel}
+          label={textRes.updatedInputLabel}
           value={formState.updatedAt}
           fullWidth
           disabled
           sx={{ ...styles.inputField, display: formProps?.id ? "" : "none" }}
         />
         <TextField
-          label={textRes.roleVersInputLabel}
+          label={textRes.versInputLabel}
           value={formState.__v}
           fullWidth
           disabled

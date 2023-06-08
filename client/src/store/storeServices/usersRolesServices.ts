@@ -1,5 +1,5 @@
 import { updateUsersRoles } from "../features/usersRoles.slice";
-import { RoleDocument, RoleInput } from "../features/appState.types";
+import { RoleDocument, RoleInput, UserDocument } from "../features/appState.types";
 import store from "../store";
 import {
   apiCallHelper,
@@ -77,4 +77,27 @@ export const deleteRoleService = async (roleId: string) => {
 export const resolveRoleById = (roleId: string): RoleDocument | undefined => {
   const usersRoles = store.getState().usersRoles.value;
   return usersRoles.appRoles?.find((it) => it._id === roleId);
+};
+
+export const updateAllUsers = async () => {
+  let usersRoles = store.getState().usersRoles.value;
+  const usersResponse = await apiCallHelper({
+    method: "GET",
+    url: `${USER_API}/allusers`,
+    auth: true,
+  });
+  if (!usersResponse.error) {
+    usersRoles = {
+      ...usersRoles,
+      appUsers: usersResponse.data as UserDocument[],
+    };
+    store.dispatch(updateUsersRoles(usersRoles));
+  } else {
+    //TODO: process error handling and forwarding to the error page
+  }
+};
+
+export const resolveUserById = (userId: string): UserDocument | undefined => {
+  const usersRoles = store.getState().usersRoles.value;
+  return usersRoles.appUsers?.find((it) => it._id === userId);
 };

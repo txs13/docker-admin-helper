@@ -14,7 +14,10 @@ import {
 import { RootState } from "../../store/store";
 import { getTextResources } from "../../resources/getTextResources";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { resolveRoleById } from "../../store/storeServices/usersRolesServices";
+import {
+  resolveRoleById,
+  resolveUserById,
+} from "../../store/storeServices/usersRolesServices";
 
 const AdminRoute: React.FunctionComponent = () => {
   // the idea is to manage admin panel tabs navigation through the url path
@@ -35,8 +38,12 @@ const AdminRoute: React.FunctionComponent = () => {
       // TODO: show error screen with wrong roleID
     }
 
-    if (params.userID) {
-      // TODO: handle user details routing similar to role detail routing above
+    if (params.userID && resolveUserById(params.userID)) {
+      const regex = new RegExp(`/${params.userID}$`);
+      const shortenedPath = path.replace(regex, "");
+      return shortenedPath;
+    } else {
+      // TODO: show error screen with wrong roleID
     }
 
     return path;
@@ -66,8 +73,8 @@ const AdminRoute: React.FunctionComponent = () => {
           <Box sx={styles.tabsList}>
             <TabList orientation="vertical" onChange={handleTabChange}>
               <Tab label={textRes.startingTabItem} value="/adminpanel" />
-              <Tab label={textRes.usersTabItem} value="/adminpanel/users" />
               <Tab label={textRes.rolesTabItem} value="/adminpanel/roles" />
+              <Tab label={textRes.usersTabItem} value="/adminpanel/users" />
             </TabList>
           </Box>
           <Box sx={styles.fragmentPort}>
@@ -78,7 +85,7 @@ const AdminRoute: React.FunctionComponent = () => {
               <RolesFragment roleID={params.roleID} />
             </TabPanel>
             <TabPanel value="/adminpanel/users">
-              <UsersFragment />
+              <UsersFragment userID={params.userID} />
             </TabPanel>
           </Box>
         </Box>

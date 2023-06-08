@@ -8,7 +8,7 @@ import {
   useTheme,
   FormControlLabel,
   Switch,
-  IconButton
+  IconButton,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -72,7 +72,7 @@ const UsersFragment: React.FunctionComponent<UsersFragmentPropsType> = ({
 
   // get users from the store----------------------------------------------------
   const users = useSelector(
-    (state: RootState) => state.usersRoles.value.appUsers || []
+    (state: RootState) => state.usersRoles.value.appUsers
   );
   const [filteredUsers, setFilteredUsers] = useState<UserDocument[]>([]);
 
@@ -189,6 +189,47 @@ const UsersFragment: React.FunctionComponent<UsersFragmentPropsType> = ({
         break;
     }
   };
+
+  useEffect(() => {
+    let usersToFilter: UserDocument[] = [...(users || [])];
+    // step one - apply field filter
+    if (filters.filterValue) {
+      usersToFilter = usersToFilter.filter((user) => {
+        switch (filters.field) {
+          case "company":
+            return user.company
+              ?.toLocaleLowerCase()
+              .includes(filters.filterValue.toLowerCase());
+          case "description":
+            return user.description
+              ?.toLocaleLowerCase()
+              .includes(filters.filterValue.toLowerCase());
+
+          case "email":
+            return user.email
+              .toLocaleLowerCase()
+              .includes(filters.filterValue.toLowerCase());
+
+          case "familyname":
+            return user.familyname
+              ?.toLocaleLowerCase()
+              .includes(filters.filterValue.toLowerCase());
+
+          case "name":
+            return user.name
+              .toLocaleLowerCase()
+              .includes(filters.filterValue.toLowerCase());
+          default:
+            return false;
+        }
+      });
+    }
+    // step two - apply only UNconfirmed filter
+    if (filters.showUnconfirmed) {
+      usersToFilter = usersToFilter.filter((user) => !user.isConfirmed);
+    }
+    setFilteredUsers(usersToFilter);
+  }, [filters.field, filters.filterValue, filters.showUnconfirmed, users]);
 
   // page event handlers -----------------------------------------------------
   const handleRowClick: GridEventListener<"rowClick"> = (params) => {

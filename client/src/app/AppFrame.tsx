@@ -24,8 +24,9 @@ import {
 } from "../resources/getTextResources.types";
 import { getTextResources } from "../resources/getTextResources";
 import { ModalForms } from "../store/features/modalState.types";
-import RoleForm from "./components/UserRoleComponents/RoleForm";
 import { handleConfirmationAccepted, handleConfirmationClose } from "../store/storeServices/modalStateServices";
+import RoleForm from "./components/UserRoleComponents/RoleForm";
+import UserForm from "./components/UserRoleComponents/UserForm";
 
 const AppFrame: React.FunctionComponent = () => {
   const theme = useTheme();
@@ -83,7 +84,10 @@ const AppFrame: React.FunctionComponent = () => {
                 showForm={modalState.mainModalOpen}
               />
             ) : modalState.formToRender === ModalForms.USER_FORM ? (
-              <LoadingFragment />
+              <UserForm
+                formProps={modalState.formProps}
+                showForm={modalState.mainModalOpen}
+              />
             ) : (
               <LoadingFragment />
             )}

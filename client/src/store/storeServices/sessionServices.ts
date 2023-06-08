@@ -19,7 +19,7 @@ import {
   readUpdateCookiesData,
   updateSaveCookiesData,
 } from "./appStateServices";
-import { updateAllRoles, updatePublicRoles } from "./usersRolesServices";
+import { updateAllRoles, updateAllUsers, updatePublicRoles } from "./usersRolesServices";
 
 interface LoginServiceResponse {
   error: boolean;
@@ -80,6 +80,8 @@ export const loginService = async (
       storeAppState = { ...storeAppState, isAdmin: true };
       // read all the app roles including admin ones
       await updateAllRoles();
+      // read all the users
+      await updateAllUsers();
     }
 
     // get current role
@@ -129,6 +131,7 @@ export const refreshTokenService = async () => {
       if (refreshResponse.data.isAdmin) {
         appState = { ...appState, isAdmin: true };
         await updateAllRoles();
+        await updateAllUsers();
       }
       const currentUser: UserDocument = refreshResponse.data.user;
       const currentRole = getRole(currentUser.userrole_id);
